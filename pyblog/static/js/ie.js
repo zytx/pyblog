@@ -1,0 +1,1 @@
+alert('您的浏览器版本过低，请使用Chrom、FireFox、Opera等现代浏览器浏览本站');

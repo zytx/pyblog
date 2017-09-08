@@ -1,0 +1,17 @@
+<h4 class="pb-2">推荐文章</h4>
+<ul class="list-unstyled text-muted mb-3">
+  {% for item in siderbar.hot %}
+      <li class="text-truncate"><a href="{% url 'article' item.slug %}" title="{{item.title}}">{{item.title}}</a> ({{item.comment__count}})</li>
+  {% endfor %}
+</ul>
+<h4 class="pb-2">文章分类</h4>
+<ul class="list-unstyled mb-3">
+{% for category in siderbar.categorys %}
+<li><a href="{% url 'category' category.slug %}" title="{{category.title}}">{{category.title}}</a></li>
+{% endfor %}
+</ul>
+
+<h4 class="pb-2">标签</h4>
+  {% for tag in siderbar.tags %}
+  <a class="tag-list" href="{% url 'tag' tag.slug %}" title="{{tag.title}}">{{tag.title}}</a>
+  {% endfor %}

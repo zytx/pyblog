@@ -1,0 +1,11 @@
+{% extends "articleList.html" %}
+
+{% block title %}{{object_list.0.category}}{% endblock %}
+
+{% block keywords %}{{object_list.0.category.keywords}}{% endblock %}
+
+{% block description %}{{object_list.0.category.desc}}{% endblock %}
+
+{% block breadcrumb %}
+<h1 class="h6 mb-3">分类：{{object_list.0.category.title}}{% if page_obj %}{% ifnotequal page_obj.number 1 %} - 第{{ page_obj.number }}页 {% endifnotequal %}{% endif %}</h1>
+{% endblock %}

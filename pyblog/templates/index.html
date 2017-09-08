@@ -1,0 +1,7 @@
+{% extends "articleList.html" %}
+
+{% block title %}{{siteTitle}}{% if page_obj %}{% ifnotequal page_obj.number 1 %} - 第{{ page_obj.number }}页 {% endifnotequal %}{% endif %}{% endblock %}
+
+{% block keywords %}index{% endblock %}
+
+{% block description %}index{% endblock %}

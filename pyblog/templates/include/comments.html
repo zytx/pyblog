@@ -1,0 +1,79 @@
+{% load comment %}
+<h4 class="mb-3">评论</h4>
+<div id="comment-list" class="mb-3">
+{% for comment in comments.values %}
+    <div class="media my-2">
+        <img class="avatar d-flex mt-1 mr-3" src="{{comment.parent.get_email|avatar}}"></img>
+        <div class="media-body">
+            <span class="comment-nikename">{% if comment.parent.get_url  %}<a href="{{comment.parent.get_url}}" rel="external nofollow" target="_blank">{% endif %}{{comment.parent.get_nikename}}{% if comment.parent.get_url %}</a>{% endif %} : </span>
+            <div class="small text-secondary float-right">
+                <span class="comment-date">{{comment.parent.date | date:"Y/m/d H:i:s"}} </span>
+                <span class="comment-reply" title="回复" data-to="{{ comment.parent.id }}">Reply</span>
+            </div>
+            <div class="comment-text my-3">{{comment.parent.content}}</div>
+            {% for reply in comment.reply %}
+            <div class="media my-2">
+                <img class="avatar d-flex mt-1 mr-3" src="{{reply.get_email|avatar}}"></img>
+                <div class="media-body">
+                    <span class="comment-nikename">{% if reply.get_url %}<a href="{{reply.get_url}}" rel="external nofollow" target="_blank">{% endif %}{{reply.get_nikename}}{% if reply.get_url %}</a>{% endif %} : {% if reply.at.get_nikename %}@{{reply.at.get_nikename}}{% endif %}</span>
+                    <div class="small text-secondary float-right">
+                        <span class="comment-date">{{reply.date | date:"Y/m/d H:i:s"}} </span>
+                        <span class="comment-reply" title="回复" data-to="{{ reply.id }}">Reply</span>
+                    </div>
+                    <div class="comment-text my-3">{{reply.content}}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+<form id="comment-form" method='post' action="#comment-form" class="pt-3">
+    {% csrf_token %}
+    <input type='hidden' name='to' value='' />
+    <h5 class="mb-3">发表评论</h5>
+{% if user.is_authenticated %}
+    <div class="media mb-2">
+        <img id="comment-form-avatar" class="mr-2" src="{{user.email|avatar}}">
+        <div class="media-body">
+            <div class="mb-2">Hi，<span class="comment-nikename">{{user.get_full_name}}</span> <div class="float-right"><a href="{% url 'logout' %}?cb={{request.path}}#comment-form" rel="nofollow">注销</a></div></div>
+            <div>欢迎回来</div>
+        </div>
+    </div>
+{% else %}
+    <div class="mb-2">
+        <div class="">游客，您还可以<a data-toggle="modal" data-target="#login-modal" href="#">登录</a>/<a data-toggle="modal" data-target="#register-modal" href="#">注册</a></div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <input class="form-control rounded-0{% if commentForm.nikename.errors %} is-invalid{% endif %}" value="{% firstof commentForm.nikename.value %}" name="{{commentForm.nikename.name}}" placeholder="昵称*"/>
+                <div class="invalid-feedback">{% firstof commentForm.nikename.errors.0 %}</div>
+            </div>
+            <div class="form-group">
+                <input class="form-control rounded-0{% if commentForm.email.errors %} is-invalid{% endif %}" value="{% firstof commentForm.email.value %}" name="{{commentForm.email.name}}" placeholder="邮箱*"/>
+                <div class="invalid-feedback">{% firstof commentForm.email.errors.0 %}</div>
+            </div>
+            <div class="form-group">
+                <input class="form-control rounded-0{% if commentForm.url.errors %} is-invalid{% endif %}" value="{% firstof commentForm.url.value %}" name="{{commentForm.url.name}}" placeholder="网站"/>
+                <div class="invalid-feedback">{% firstof commentForm.url.errors.0 %}</div>
+            </div>
+        </div>
+        <div class="col-3 text-right">
+            <img id="comment-form-avatar" class="img-fluid" src="{{''|avatar:'130'}}">
+        </div>
+    </div>
+{% endif %}
+    <div class="form-group">
+        <textarea class="form-control rounded-0{% if commentForm.content.errors %} is-invalid{% endif %}" rows="5" name="{{commentForm.content.name}}" placeholder="Tell me about your dreams.">{% firstof commentForm.content.value %}</textarea>
+        <div class="invalid-feedback">{% firstof commentForm.content.errors.0 %}</div>
+    </div>
+    <div class="form-check">
+        <label class="form-check-label"><input type="checkbox" class="form-check-input" name="{{commentForm.allow_email.name}}"{%if commentForm.allow_email.value %} checked="checked"{%endif%}>有回复时通过邮件通知我</label>
+    </div>
+    <div class="form-group">
+        <button id="comment-submit" class="btn btn-info rounded-0 mr-2" type="submit">提交</button>
+        <span id="comment-success" class="text-success"></span>
+    </div>
+</form>

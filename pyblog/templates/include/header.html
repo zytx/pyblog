@@ -1,0 +1,35 @@
+{% load static %}
+    <div id="header" class="row bg-info text-white">
+        <div class="col pt-5 pb-3 pl-5 d-none d-md-block">
+            {% if request.path == '/' %}
+            <h1 class="h2">{{siteTitle}}H1</h1>
+            {% else %}
+            <div class="h2">{{siteTitle}}DIV</div>
+            {% endif %}
+            <p class="">般百度的静态资源都有cdn的,这样的好处就是用户访问更快 ..</p>
+        </div>
+    </div>
+
+    <nav id="header-navbar" class="row navbar navbar-expand-sm navbar-dark bg-dark p-0">
+        <div class="header-progress-bar bg-info" role="progressbar"></div>
+        <a class="navbar-brand d-md-none" href="{% url 'index' %}">我的博客</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-top" aria-controls="navbar-top" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar-top">
+            <div class="navbar-nav mr-auto">
+                <a class="nav-item nav-link p-3" href="{% url 'index' %}">首页</a>
+                <a class="nav-item nav-link p-3" href="{% url 'archive' %}">归档</a>
+            </div>
+        <!--<form class="form-inline">-->
+        <!--    <input class="form-control mr-sm-2" type="text" placeholder="搜索">-->
+        <!--    <button class="btn btn-outline-info" type="submit">Search</button>-->
+        <!--</form>-->
+        <label class="custom-control custom-checkbox mt-3">
+          <input id="ajax-checkbox" type="checkbox" class="custom-control-input" {%if checkboxAJAX == '1' %}checked="checked"{%endif%}>
+          <span class="custom-control-description text-white mr-2">AJAX</span>
+          <span class="custom-control-indicator"></span>
+        </label>
+        </div>
+    </nav>
+

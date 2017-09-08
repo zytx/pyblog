@@ -1,0 +1,145 @@
+{% if not request.is_ajax %}<!DOCTYPE html>
+<html lang="zh-CN">{% load static %}
+<head>
+<!--[if lte IE 8 ]>
+	<script src="{% static "js/ie.js" %}"></script>
+<![endif]-->
+{% endif %}
+	<title>{% block title %}{% endblock %}{% if request.path != '/' %}{% if page_obj %}{% ifnotequal page_obj.number 1 %} - 第{{ page_obj.number }}页 {% endifnotequal %}{% endif %} - {{siteTitle}}{% endif %}</title>
+{% if not request.is_ajax %}
+	<meta name="keywords" content="{% block keywords %}{% endblock %}">
+	<meta name="description" content="{% block description %}{% endblock %}">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!--<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/twbs/bootstrap@4.0.0-beta/dist/css/bootstrap.min.css">-->
+	<!--<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/mervick/emojionearea@3.1.8/dist/emojionearea.min.css">-->
+	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" />
+	<!--<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/mervick/emojionearea@3.1.8/dist/emojionearea.min.css" />-->
+	<link rel="stylesheet" href="{% static "emojionearea/emojionearea.min.css" %}" />
+	<link rel="stylesheet" href="{% static "css/style.css" %}" />
+</head>
+<body>
+
+<div id="wrapper" class="container mb-3">
+{% include "include/header.html" %}
+    <div class="row my-4">
+        <div class="col mb-3">
+            <div id="content" class="px-2" style="position:relative">
+{% endif %}
+                {% block breadcrumb %}{% endblock %}
+                {% block content %}{% endblock %}
+{% if not request.is_ajax %}
+            </div>
+        	<div class="mask"></div>
+        </div>
+        <aside id="sidebar" class="col-xl-3">{% include "include/sidebar.html" %}</aside>
+    </div>
+{% include "include/footer.html" %}
+</div>
+<div class="modal fade" id="reward-modal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title h5">打赏</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body text-center">
+				<img id="alipay" src="/static/img/alipay.gif" height="200"></img>
+				<br>支付宝
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="register-modal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title h5">注册</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+		        <form id="register-form" method="post" action="/auth/register/">
+		            {% csrf_token %}
+		            <div class="form-group">
+		                <input class="form-control rounded-0" value="" name="nikename" placeholder="昵称">
+		                <div class="invalid-feedback"></div>
+		            </div>
+		            <div class="form-group">
+		                <input class="form-control rounded-0" value="" name="email" placeholder="邮箱">
+		                <div class="invalid-feedback"></div>
+		            </div>
+		            <div class="form-group">
+		                <input class="form-control rounded-0" value="" name="password1" type="password" placeholder="密码">
+		                <div class="invalid-feedback"></div>
+		            </div>
+		            <div class="form-group">
+		                <input class="form-control rounded-0" value="" name="password2" type="password" placeholder="确认密码">
+		                <div class="invalid-feedback"></div>
+		            </div>
+		            <div class="form-group">
+		                <input class="form-control rounded-0" value="" name="url" placeholder="网站（可选）">
+		                <div class="invalid-feedback"></div>
+		            </div>
+		        </form>
+			</div>
+			<div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-info" onclick="$('#register-form').submit()">确定</button>
+            </div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title h5">登录</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+		        <form id="login-form" method="post" action="/auth/login/">
+		        	{% csrf_token %}
+		            <div class="form-group">
+		                <input class="form-control rounded-0" name="email" type="email" placeholder="邮箱*">
+		                <div class="invalid-feedback"></div>
+		            </div>
+		            <div class="form-group">
+		                <input class="form-control rounded-0" name="password" type="password" placeholder="密码*">
+		                <div class="invalid-feedback"></div>
+		            </div>
+		        </form>
+			</div>
+			<div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-info" onclick="$('#login-form').submit()">确定</button>
+            </div>
+		</div>
+	</div>
+</div>
+	<!--<script src="//cdn.jsdelivr.net/gh/jquery/jquery@3.2.1/dist/jquery.min.js"></script>-->
+	<!--<script src="//cdn.jsdelivr.net/gh/FezVrasta/popper.js@1.12.3/dist/umd/popper.min.js"></script>-->
+	<!--<script src="//cdn.jsdelivr.net/gh/twbs/bootstrap@4.0.0-beta/dist/js/bootstrap.min.js"></script>-->
+	<!--<script src="//cdn.jsdelivr.net/npm/code-prettify@0.1.0/loader/prettify.js"></script>-->
+
+	<!--<script src="//cdn.jsdelivr.net/gh/blueimp/JavaScript-MD5@2.8.0/js/md5.min.js"></script>-->
+	<!--<script src="//cdn.jsdelivr.net/emojione/2.2.7/lib/js/emojione.min.js"></script>-->
+	<!--<script src="//cdn.jsdelivr.net/gh/mervick/emojionearea@3.1.8/dist/emojionearea.min.js"></script>-->
+
+	<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+	<script src="//cdn.bootcss.com/popper.js/1.12.3/umd/popper.min.js"></script>
+	<script src="//cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+	<script src="//cdn.bootcss.com/prettify/r224/prettify.min.js"></script>
+
+	<script src="//cdn.bootcss.com/blueimp-md5/2.7.0/js/md5.min.js"></script>
+	<script src="//cdn.bootcss.com/emojione/2.2.7/lib/js/emojione.min.js"></script>
+	<script src="//cdn.jsdelivr.net/gh/mervick/emojionearea@3.1.8/dist/emojionearea.min.js"></script>
+	<script src="{% static "js/comment.js" %}"></script>
+	<script src="{% static "js/apps.js" %}"></script>
+</body>
+</html>
+{% endif %}

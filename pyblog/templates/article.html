@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load pyblog %}
+{% load i18n %}
+
+{% block title %}{{ article.title }} - {{article.category.title}}{% endblock %}
+
+{% block keywords %}{% if article.keys %}{{article.keys}},{% endif %}{{ article.tags.all|join:"," }},{{article.category.title}}{% endblock %}
+
+{% block description %}{% firstof article.desc article.content|markdown|striptags|cut:" "|slice:"200"|denewline %}{% endblock %}
+
+{% block content %}
+
+<article class="article mb-4">
+    <h1 class="h2 mt-2 text-center">{{ article.title }}</h1>
+    <div class="text-secondary text-center small mb-3">
+        {% language 'en' %}{{ article.pub_date|date:"N j, Y" }}{% endlanguage %} ·
+        <a href="{% url 'category' article.category.slug %}" title="{{article.category.title}}">{{article.category.title}}</a>
+    </div>
+    <div class="article-text">{{ article.content|markdown|safe }}</div>
+    <div class="article-footer text-secondary mt-4">
+        {% for tag in article.tags.all %}
+        <a class="tag-list" href="{% url 'tag' tag.slug %}" rel="tag" title="标签：{{tag.title}}">{{tag.title}}</a>
+        {% endfor %}        
+        <div class="mt-2">
+            本站文章若未特别说明均为原创，如需转载请注明出处。
+        </div>
+    </div>
+</article>
+<div class="text-center text-secondary mb-4">
+    <button type="button" id="reward" class="btn btn-outline-info rounded-0 mb-3" data-toggle="modal" data-target="#reward-modal">赏</button><br>
+    您的支持将鼓励我继续创作！
+</div>
+<div class="related-articles mb-4">
+    <h4 class="mb-3">相关文章</h4>
+    <div class="row">
+    {% for article in relatedArticles %}
+        <div class="col-6 text-truncate">› <a href="{% url 'article' article.slug %}" title="{{article.title}}">{{article.title}}</a></div>
+    {% endfor %}
+    </div>
+</div>
+
+{% include "include/comments.html" %}
+
+{% endblock %}

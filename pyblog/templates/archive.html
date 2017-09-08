@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}文章归档{% endblock %}
+
+{% block keywords %}文章归档{% endblock %}
+
+{% block description %}包含本站所有文章的归档页面{% endblock %}
+
+{% block content %}
+{% load i18n %}
+
+<h1 class="h2 mt-2 text-center">文章归档</h1>
+{% regroup latest by pub_date.year as dates_by_year %}
+
+{% for year in dates_by_year %}
+<div>
+  <h2 class="mb-0 h5">
+    <a data-toggle="collapse" href="#id{{ year.grouper }}" aria-controls="id{{ year.grouper }}">
+      {{ year.grouper }}年
+    </a>
+  </h2>
+</div>
+{% regroup year.list by pub_date.month as dates_by_month %}
+<div id="id{{ year.grouper }}" class="collapse card-block {% if forloop.first %}show{% endif %}" role="tabpanel">
+    {% for day in dates_by_month %}
+        <ul>
+            <li>
+                {{ day.grouper }}月
+                <ul>
+                    {% for item in day.list %}
+                        <li>
+                            <h3 class="h6">{{item.pub_date|date:"d日"}} <a href="{% url 'article' item.slug %}">{{ item.title }}</a></h3>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+    {% endfor %}
+</div>
+{% endfor %}
+
+{% endblock %}
