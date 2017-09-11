@@ -19,7 +19,7 @@ class Renderer(mistune.Renderer):
         :param level: a number for the header level, for example: 1.
         :param raw: raw text content of the header.
         """
-        return '<h%d class="h%d">%s</h%d>\n' % (level, level+2 ,text, level)
+        return '<h%d class="h%d my-4">%s</h%d>\n' % (level, level+2 ,text, level)
 
 
 @register.filter()
