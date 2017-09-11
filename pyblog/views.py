@@ -11,6 +11,7 @@ from comment.models import Comment
 from authentication.forms import UserLoginForm,UserCreationForm
 from collections import OrderedDict
 
+from django.conf import settings
 
 # Create your views here.
 
@@ -29,7 +30,8 @@ class SiteAJAX(ContextMixin):
             re['checkboxAJAX'] = self.request.COOKIES.get('AJAX','1')
             re['loginForm'] = UserLoginForm()
             re['regForm'] = UserCreationForm()
-        re['siteTitle'] = "Mr.Z's blog"
+        re['siteTitle'] = settings.SITE_TITLE
+        re['siteSummary'] = settings.SITE_SUMMARY
         return re
 
 

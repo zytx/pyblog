@@ -2,11 +2,11 @@
     <div id="header" class="row bg-info text-white">
         <div class="col pt-5 pb-3 pl-5 d-none d-md-block">
             {% if request.path == '/' %}
-            <h1 class="h2">{{siteTitle}}H1</h1>
+            <h1 class="h2">{{siteTitle}}</h1>
             {% else %}
-            <div class="h2">{{siteTitle}}DIV</div>
+            <div class="h2">{{siteTitle}}</div>
             {% endif %}
-            <p class="">般百度的静态资源都有cdn的,这样的好处就是用户访问更快 ..</p>
+            <p>{{siteSummary}}</p>
         </div>
     </div>
 
