@@ -27,8 +27,8 @@ urlpatterns = [
 
     url(r'^media/(?P<path>.*)/$', serve, {'document_root':settings.MEDIA_ROOT}),
     
-    url(r'^tag/([0-9a-z]+)/$',views.TagList.as_view(),name='tag'),
-    url(r'^category/([0-9a-z]+)/$',views.CategoryList.as_view(),name='category'),
+    url(r'^tag/(?P<slug>[0-9a-z-]+)/$',views.TagList.as_view(),name='tag'),
+    url(r'^category/(?P<slug>[0-9a-z-]+)/$',views.CategoryList.as_view(),name='category'),
     
     url(r'^editormd/',include('editormd.urls')),
     url(r'^auth/',include('authentication.urls')),
