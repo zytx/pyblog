@@ -84,7 +84,7 @@ class ArticleDetail(SiteAJAX,DetailView):
             else:
                 re['comments'][comment.parent.id]['reply'].append(comment)
         re['commentForm'] = get_comment_form(self.request)
-        re['relatedArticles'] = Article.objects.filter(Q(category=re['article'].category) | Q(tags__in=re['article'].tags.all())).order_by('-pub_date').values('slug','title')[:10]
+        re['relatedArticles'] = Article.objects.filter(Q(category=re['article'].category) | Q(tags__in=re['article'].tags.all())).distinct().order_by('-pub_date').values('slug','title')[:10]
         return re
 
     def post(self, request, *args, **kwargs):
