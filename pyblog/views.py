@@ -30,8 +30,8 @@ class SiteAJAX(ContextMixin):
             re['checkboxAJAX'] = self.request.COOKIES.get('AJAX','1')
             re['loginForm'] = UserLoginForm()
             re['regForm'] = UserCreationForm()
+            re['siteSummary'] = settings.SITE_SUMMARY
         re['siteTitle'] = settings.SITE_TITLE
-        re['siteSummary'] = settings.SITE_SUMMARY
         return re
 
 
@@ -43,7 +43,11 @@ class ArticleList(SiteAJAX,ListView):
 
 class Index(ArticleList):
     template_name = 'index.html'
-
+    def get_context_data(self, **kwargs):
+        re                = super(__class__,self).get_context_data(**kwargs)
+        re['keywords']    = settings.INDEX_KEYWORDS
+        re['description'] = settings.INDEX_DESCRIPTION
+        return re
 
 class CategoryList(ArticleList):
     template_name = 'category.html'
