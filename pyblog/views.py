@@ -60,7 +60,7 @@ class TagList(ArticleList):
     template_name = 'tag.html'
 
     def get_queryset(self):
-        return super(__class__,self).get_queryset().filter(tags__slug=self.kwargs['slug']))
+        return super(__class__,self).get_queryset().filter(tags__slug=self.kwargs['slug'])
 
 
 class ArticleDetail(SiteAJAX,DetailView):
