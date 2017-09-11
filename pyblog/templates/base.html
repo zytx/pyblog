@@ -64,23 +64,23 @@
 		        <form id="register-form" method="post" action="/auth/register/">
 		            {% csrf_token %}
 		            <div class="form-group">
-		                <input class="form-control rounded-0" value="" name="nikename" placeholder="昵称">
+		                <input class="form-control rounded-0" name="nikename" placeholder="昵称">
 		                <div class="invalid-feedback"></div>
 		            </div>
 		            <div class="form-group">
-		                <input class="form-control rounded-0" value="" name="email" placeholder="邮箱">
+		                <input class="form-control rounded-0" name="email" placeholder="邮箱">
 		                <div class="invalid-feedback"></div>
 		            </div>
 		            <div class="form-group">
-		                <input class="form-control rounded-0" value="" name="password1" type="password" placeholder="密码">
+		                <input class="form-control rounded-0" name="password1" type="password" placeholder="密码">
 		                <div class="invalid-feedback"></div>
 		            </div>
 		            <div class="form-group">
-		                <input class="form-control rounded-0" value="" name="password2" type="password" placeholder="确认密码">
+		                <input class="form-control rounded-0" name="password2" type="password" placeholder="确认密码">
 		                <div class="invalid-feedback"></div>
 		            </div>
 		            <div class="form-group">
-		                <input class="form-control rounded-0" value="" name="url" placeholder="网站（可选）">
+		                <input class="form-control rounded-0" name="url" placeholder="网站（可选）">
 		                <div class="invalid-feedback"></div>
 		            </div>
 		        </form>

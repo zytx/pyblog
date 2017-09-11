@@ -66,7 +66,7 @@ class ArticleDetail(SiteAJAX,DetailView):
 
     def get_context_data(self,**kwargs):
         re  = super(__class__,self).get_context_data(**kwargs)
-        comments = Comment.objects.select_related('user','parent','at__user').order_by('parent',).filter(article=re['article'])
+        comments = Comment.objects.select_related('user','parent','at__user').order_by('parent','date').filter(article=re['article'])
 
         re['comments'] = OrderedDict()
         for comment in comments:
