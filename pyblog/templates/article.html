@@ -4,7 +4,7 @@
 
 {% block title %}{{ article.title }} - {{article.category.title}}{% endblock %}
 
-{% block keywords %}{% if article.keys %}{{article.keys}},{% endif %}{{ article.tags.all|join:"," }},{{article.category.title}}{% endblock %}
+{% block keywords %}{% if article.keywords %}{{article.keywords}},{% endif %}{{ article.tags.all|join:"," }},{{article.category.title}}{% endblock %}
 
 {% block description %}{% firstof article.desc article.content|markdown|striptags|cut:" "|slice:"200"|denewline %}{% endblock %}
 
