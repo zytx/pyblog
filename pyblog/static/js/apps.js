@@ -1,6 +1,6 @@
 var siteAJAX=(function($,comments) {
     var content = $('#content');
-    var selector = 'a:not([rel*="nofollow"],[rel*="external"],[target="_blank"],[href="#"]:has(img))';
+    var selector = 'a:not([rel*="nofollow"],[rel*="external"],[target="_blank"],[href="#"],:has(img))';
     var progress_bar = $(".header-progress-bar");
 
     var setCookie = function (v) {
