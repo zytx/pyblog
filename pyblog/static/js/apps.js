@@ -87,6 +87,13 @@ var siteAJAX=(function($,comments) {
     }
 })(jQuery,comments);
 
+
+function modelInit() {
+    $('#reward-modal').on('show.bs.modal',function(e){
+        $(this).find('#alipay').attr('src','/static/img/alipay.gif');
+    });
+}
+
 function emoji() {
     emojione.imageType = 'svg';
     emojione.imagePathSVG = '//cdn.bootcss.com/emojione/2.2.7/assets/svg/';
@@ -108,6 +115,7 @@ $(document).ready(function(){
     prettyPrint();
     comments.init();
     emoji();
+    modelInit();
 
     siteAJAX.init(function(){
         prettyPrint();
