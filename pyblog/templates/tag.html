@@ -1,11 +1,11 @@
 {% extends "articleList.html" %}
 
-{% block title %}{{object_list.0.tags.all.0}}{% endblock %}
+{% block title %}{{tag.title}}{% endblock %}
 
-{% block keywords %}{{object_list.0.tags.all.0.keywords}}{% endblock %}
+{% block keywords %}{{tag.keywords}}{% endblock %}
 
-{% block description %}{{object_list.0.tags.all.0.desc}}{% endblock %}
+{% block description %}{{tag.desc}}{% endblock %}
 
 {% block breadcrumb %}
-<h1 class="h6 mb-3">标签：{{object_list.0.tags.all.0.title}}{% if page_obj %}{% ifnotequal page_obj.number 1 %} - 第{{ page_obj.number }}页 {% endifnotequal %}{% endif %}</h1>
+<h1 class="h6 mb-3">标签：{{tag.title}}{% if page_obj %}{% ifnotequal page_obj.number 1 %} - 第{{ page_obj.number }}页 {% endifnotequal %}{% endif %}</h1>
 {% endblock %}
