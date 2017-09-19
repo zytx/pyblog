@@ -50,6 +50,6 @@ class Login(View):
 class Logout(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
-        self.url = self.request.GET.get('cb','/')
+        self.url = self.request.META.get('HTTP_REFERER','/')
         logout(self.request)
         return super(Logout, self).get_redirect_url(*args, **kwargs)
