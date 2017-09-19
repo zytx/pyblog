@@ -5,8 +5,8 @@ from django.conf import settings
 
 
 class Tag(models.Model):
-    title = models.CharField('标签', max_length=100)
-    slug = models.SlugField('别名(URL)', max_length=100)
+    title = models.CharField('标签', max_length=100, unique=True)
+    slug = models.SlugField('别名(URL)', max_length=100, unique=True)
     keywords = models.CharField('关键字', blank=True, null=True, max_length = 200, help_text=('用于Keywords标签，逗号隔开'))
     desc = models.CharField('描述', blank=True, null=True, max_length = 500)
 
@@ -18,8 +18,8 @@ class Tag(models.Model):
 
 
 class Category(models.Model):
-    title = models.CharField('分类', max_length = 100)
-    slug = models.SlugField('别名(URL)', max_length=100)
+    title = models.CharField('分类', max_length = 100, unique=True)
+    slug = models.SlugField('别名(URL)', max_length=100, unique=True)
     keywords = models.CharField('关键字（自动追加Tag）', blank=True, null=True, max_length = 200, help_text=('用于Keywords标签，逗号隔开'))
     desc = models.CharField('描述', blank=True, null=True, max_length = 500)
 
@@ -33,8 +33,8 @@ class Category(models.Model):
 
 class Article(models.Model):
     is_pub = models.BooleanField('发布', default=True)
-    title = models.CharField('标题', max_length=100)
-    slug = models.SlugField('别名(URL)', max_length = 100)
+    title = models.CharField('标题', max_length=100, unique=True)
+    slug = models.SlugField('别名(URL)', max_length = 100, unique=True)
     content = models.TextField('正文')
     #content_html = models.TextField('HTML正文(由content生成，不要修改)')   #空间换时间。。
     keywords = models.CharField('关键字', blank=True, null=True, max_length=200, help_text=('用于Keywords标签，自动追加该文章Tag，逗号隔开'))
