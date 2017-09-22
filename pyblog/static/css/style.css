@@ -87,8 +87,8 @@ a:focus,a:hover {
 }
 .emojione{
     font-size:inherit;
-    height:3ex;
-    width:3.1ex;
+    height:2ex;
+    width:2.1ex;
     min-height:20px;
     min-width:20px;
     display:inline-block;
@@ -96,9 +96,6 @@ a:focus,a:hover {
 }
 img.emojione{
     width:auto
-}
-.comment-nikename .emojione{
-    height: 2ex;
 }
 
 /**
@@ -132,7 +129,7 @@ img.emojione{
 *    代码高亮
 **/
 /* desert scheme ported from vim to google prettify */
-pre.prettyprint { padding: 10px 0;display: block;background-color: #444 }
+pre.prettyprint { padding: 10px 0;display: block;background-color: #444;color:#fff; }
 pre .nocode { background-color: none; color: #000 }
 pre .str { color: #ffa0a0 } /* string  - pink */
 pre .kwd { color: #f0e68c; font-weight: bold }

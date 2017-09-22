@@ -1,3 +1,21 @@
+var auth=(function () {
+    $('body').on('submit',"#login-form,#register-form",function(e){
+        e.preventDefault();
+        form = $(this);
+        $.post(form.attr('action'),form.serialize(),function(re) {
+            if(re['status']==1){
+                location.reload();
+            }else{
+                form.find(".invalid-feedback").text('');
+                form.find(".form-control.is-invalid").removeClass('is-invalid');
+                for(var k in re['errors']){
+                    form.find("input[name='"+k+"']").addClass('is-invalid').siblings('.invalid-feedback').hide().fadeIn(500).html(re['errors'][k]);
+                }
+            }
+        },'json');
+    });
+})();
+
 var siteAJAX=(function($,comments) {
     var content = $('#content');
     var selector = 'a:not([rel*="nofollow"],[rel*="external"],[target="_blank"],[href="#"],:has(img))';
@@ -94,34 +112,32 @@ function modelInit() {
     });
 }
 
-function emoji() {
-    emojione.imageType = 'svg';
-    emojione.imagePathSVG = '//cdn.bootcss.com/emojione/2.2.7/assets/svg/';
-    //emojione.imagePathSVG = '//cdn.jsdelivr.net/emojione/assets/svg/';
-    $('.comment-text,.comment-nikename,#comment-form-nikename').each(function(){      //渲染评论表情
-        $(this).html(emojione.unicodeToImage($(this).html()));
-    });
-    $("#comment-form textarea").emojioneArea({          //渲染评论文本框
-      template        : "<filters/><tabs/><editor/>",
-      tonesStyle      : "radio",
-      imageType       : "svg",
-      autocomplete    : false,    //关闭自动补全
-      useInternalCDN  : false,      //关闭cloudflare CDN
-      buttonTitle     : '表情[Tab]'
-    });
+function highlight() {
+    if($('pre.prettyprint').length > 0){
+        if(typeof prettyPrint !== 'undefined' && $.isFunction(prettyPrint)){
+            prettyPrint();
+        }else{
+            $.getScript('//cdn.bootcss.com/prettify/r224/prettify.min.js',function() {
+                prettyPrint();
+            })
+        }
+    }
 }
 
-$(document).ready(function(){
-    prettyPrint();
-    comments.init();
-    emoji();
-    modelInit();
+emojione.imageType = 'svg';
+emojione.imagePathSVG = '//cdn.bootcss.com/emojione/2.2.7/assets/svg/';
+$.ajaxSetup({cache: true});
 
-    siteAJAX.init(function(){
-        prettyPrint();
-        emoji();
+$(document).ready(function(){
+    highlight();
+    comments.init();
+    modelInit();
+    $('#header .nikename').html(function(){
+        return emojione.unicodeToImage($(this).html());
     });
-    
+    siteAJAX.init(function(){
+        highlight();
+    });
     $('.modal').keydown(function(e){
         if(e.keyCode==13){
             $(this).find('form').submit();
