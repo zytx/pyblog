@@ -4,12 +4,17 @@ var comments=(function($,emojione){
         self:'#comment-form',
         to:'input[name="to"]',
         nikename:'input[name="nikename"]',
+        nikename2:'#comment-form .comment-nikename',
         email:'input[name="email"]',
         site:'input[name="url"]',
         avatar:'#comment-form-avatar',
         content:'textarea[name="content"]',
         submit:'#comment-submit'
     };
+    var comment = {
+        list:'#comment-list',
+        reply:'.comment-reply',
+    }
     function regAJAX() {
         content.on('submit',form.self,function(e){
             e.preventDefault();
@@ -23,7 +28,7 @@ var comments=(function($,emojione){
                     var ml = 0;
                     $(form.self).before('<div class="media my-2">\
                     <img class="avatar d-flex mt-1 mr-2" width="60px" src="'+ $(form.avatar).attr('src') +'">\
-                    <div class="media-body">'+emojione.unicodeToImage($(form.nikename).val()||$('#comment-form .comment-nikename').text())+'\
+                    <div class="media-body">'+emojione.unicodeToImage($(form.nikename).val()||$(form.nikename2).text())+'\
                     <span class="small text-secondary float-right">刚刚</span>\
                     <div class="my-3">'+emojione.unicodeToImage($(form.content).val())+'</div></div></div>').prev().hide().fadeIn();
                 }else{
@@ -43,14 +48,14 @@ var comments=(function($,emojione){
     }
     function init() {
         autoload();
-        content.on('click',".comment-reply",function(){
+        content.on('click',comment.reply,function(){
             if ($(this).text()=='Reply'){
-                $(form.self).prev().find('.comment-reply').text('Reply');
+                $(form.self).prev().find(comment.reply).text('Reply');
                 $(this).text('Cancel');
                 $(form.to).val($(this).attr('data-to'));
                 $(this).closest('.media').find('.comment-text').first().after($(form.self));
             }else{
-                $('#comment-list').after($(form.self));
+                $(comment.list).after($(form.self));
                 $(this).text('Reply');
                 $(form.to).val('');
             }
@@ -64,11 +69,11 @@ var comments=(function($,emojione){
         });
     }
     function brow() {
-        if(!$('#comment-list').hasClass('emojied')){
+        if(!$(comment.list).hasClass('emojied')){
             $('.comment-text,.comment-nikename,#comment-form-nikename').each(function(){      //渲染评论表情
                 $(this).html(emojione.unicodeToImage($(this).html()));
             });
-            $('#comment-list').addClass('emojied');
+            $(comment.list).addClass('emojied');
         }
     }
     function textArea() {
@@ -97,10 +102,11 @@ var comments=(function($,emojione){
 
     }
     function autoload() {
-        if($(document).scrollTop()+$(window).height()>$('#comment-list').offset().top){
+        if($(comment.list).length<=0)return;
+        if($(document).scrollTop()+$(window).height()>$(comment.list).offset().top){
             brow();
         }
-        if($(document).scrollTop()+$(window).height()>$('#comment-form').offset().top){
+        if($(document).scrollTop()+$(window).height()>$(form.self).offset().top){
             textArea();
         }
     }
