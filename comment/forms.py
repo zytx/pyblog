@@ -49,7 +49,7 @@ def post_comment_form(request,fk):
             new_comment.user    = request.user if request.user.is_authenticated() else None
             new_comment.ua      = request.META.get('HTTP_USER_AGENT',None)
             if form.cleaned_data['to'] != None:
-                to_comment =  Comment.objects.filter(id=form.cleaned_data['to'],article=fk).first()
+                to_comment =  Comment.objects.filter(id=form.cleaned_data['to'],article=fk,is_pub=True).first()
                 if to_comment != None:
                     if to_comment.parent == None:
                         new_comment.parent = to_comment

@@ -9,7 +9,6 @@ from .models import Article,Category,Tag
 from comment.forms import get_comment_form,post_comment_form
 from comment.models import Comment
 from authentication.forms import UserLoginForm,UserCreationForm
-from collections import OrderedDict
 
 from django.conf import settings
 
@@ -77,19 +76,9 @@ class ArticleDetail(SiteAJAX,DetailView):
         return super(__class__,self).get_queryset().select_related('category').prefetch_related(Prefetch('tags', queryset=Tag.objects.only('title','slug'))).only('title','slug','keywords','desc','content','pub_date','category__title','category__slug')
 
     def get_context_data(self,**kwargs):
-        re  = super(__class__,self).get_context_data(**kwargs)
-        comments = Comment.objects.select_related('user','parent','at__user').order_by('parent','date').filter(article=re['article']).defer('allow_email','article')
-
-        re['comments'] = OrderedDict()
-        for comment in comments:
-            if comment.parent == None:
-                re['comments'][comment.id] = {
-                    'parent': comment,
-                    'reply' : []
-                }
-            else:
-                re['comments'][comment.parent.id]['reply'].append(comment)
-        re['commentForm'] = get_comment_form(self.request)
+        re                    = super(__class__,self).get_context_data(**kwargs)
+        re['comments']        = Comment.get_comment_list(article=self.object)
+        re['commentForm']     = get_comment_form(self.request)
         re['relatedArticles'] = Article.objects.filter(Q(category=re['article'].category) | Q(tags__in=re['article'].tags.all())).exclude(slug=re['article'].slug).distinct().order_by('-pub_date').only('slug','title')[:10]
         return re
 
