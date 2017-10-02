@@ -111,10 +111,10 @@ var comments=(function($,emojione){
         }
     }
     return {
-        regAJAX,
-        offAJAX,
-        autoload,
-        init,
+        'regAJAX' :regAJAX,
+        'offAJAX' :offAJAX,
+        'autoload':autoload,
+        'init'    :init
     };
 })(jQuery,emojione);
 

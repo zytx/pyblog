@@ -104,7 +104,7 @@ var siteAJAX=(function($,comments) {
         callback=ck;
         outline();
         anchorScroll();
-        window.history.replaceState('<title>'+$('title:first').text()+'</title>'+content.html()+'<div id="data-outline">'+$('#outline').html()+'</div>', null, this.url);
+        window.history.replaceState('<title>'+$(document).attr("title")+'</title>'+content.html()+'<div id="data-outline">'+$('#outline').html()+'</div>', null, window.location.href);
         var cookieAJAX = (function (){
             var name = "AJAX=";
             var ca = document.cookie.split(';');
@@ -135,7 +135,7 @@ var siteAJAX=(function($,comments) {
         }
     }
     return {
-        init
+        'init':init
     }
 })(jQuery,comments);
 

@@ -3,7 +3,7 @@
 <div id="comment-list" class="mb-3">
 {% for comment in comments.values %}
     <div class="media my-2">
-        <img class="avatar d-flex mt-1 mr-3" src="{{comment.parent.get_email|avatar}}"></img>
+        <img class="avatar d-flex mt-1 mr-3" src="{{comment.parent.get_email|avatar}}"/>
         <div class="media-body">
             <span class="comment-nikename">{% if comment.parent.get_url  %}<a href="{{comment.parent.get_url}}" rel="external nofollow" target="_blank">{% endif %}{{comment.parent.get_nikename}}{% if comment.parent.get_url %}</a>{% endif %} : </span>
             <div class="small text-secondary float-right">
@@ -13,7 +13,7 @@
             <div class="comment-text my-3">{{comment.parent.content}}</div>
             {% for reply in comment.reply %}
             <div class="media my-2">
-                <img class="avatar d-flex mt-1 mr-3" src="{{reply.get_email|avatar}}"></img>
+                <img class="avatar d-flex mt-1 mr-3" src="{{reply.get_email|avatar}}"/>
                 <div class="media-body">
                     <span class="comment-nikename">{% if reply.get_url %}<a href="{{reply.get_url}}" rel="external nofollow" target="_blank">{% endif %}{{reply.get_nikename}}{% if reply.get_url %}</a>{% endif %} : {% if reply.at.get_nikename %}@{{reply.at.get_nikename}}{% endif %}</span>
                     <div class="small text-secondary float-right">
@@ -35,7 +35,7 @@
     <h5 class="mb-3">发表评论</h5>
 {% if user.is_authenticated %}
     <div class="media mb-2">
-        <img id="comment-form-avatar" class="mr-2" src="{{user.email|avatar}}">
+        <img id="comment-form-avatar" class="mr-2" src="{{user.email|avatar}}"/>
         <div class="media-body">
             <div class="mb-2">Hi，<span class="comment-nikename">{{user.get_full_name}}</span> <div class="float-right"><a href="{% url 'logout' %}" rel="nofollow">注销</a></div></div>
             <div>欢迎回来</div>
@@ -61,7 +61,7 @@
             </div>
         </div>
         <div class="col-3 text-right">
-            <img id="comment-form-avatar" class="img-fluid" src="{{''|avatar:'130'}}">
+            <img id="comment-form-avatar" class="img-fluid" src="{{''|avatar:'130'}}"/>
         </div>
     </div>
 {% endif %}

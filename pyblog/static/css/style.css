@@ -50,6 +50,7 @@ a:focus,a:hover {
 #header-navbar .header-progress-bar {
     float: left;
     position: absolute;
+    top: 0;
     height: 100%;
     opacity: .2;
 }
