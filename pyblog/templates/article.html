@@ -39,6 +39,12 @@
     </div>
 </div>
 
+{% if request.is_ajax %}
+<div id="data-outline">
+    {% outline %}
+</div>
+{% endif %}
+
 {% include "include/comments.html" %}
 
 {% endblock %}

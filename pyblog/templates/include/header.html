@@ -35,8 +35,8 @@
         <!--    <input class="form-control mr-sm-2" type="text" placeholder="搜索">-->
         <!--    <button class="btn btn-outline-info" type="submit">Search</button>-->
         <!--</form>-->
-        <label class="custom-control custom-checkbox mt-3">
-          <input id="ajax-checkbox" type="checkbox" class="custom-control-input" {%if checkboxAJAX == '1' %}checked="checked"{%endif%}>
+        <label class="custom-control custom-checkbox mt-2">
+          <input id="ajax-checkbox" type="checkbox" class="custom-control-input"{% if request.COOKIES.AJAX != '0' %} checked{% endif %}>
           <span class="custom-control-description text-white mr-2">AJAX</span>
           <span class="custom-control-indicator"></span>
         </label>

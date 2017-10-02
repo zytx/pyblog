@@ -1,4 +1,4 @@
-{% if not request.is_ajax %}<!DOCTYPE html>
+{% spaceless %}{% if not request.is_ajax %}<!DOCTYPE html>
 <html lang="zh-CN">{% load static %}
 <head>
 <!--[if lte IE 8 ]>
@@ -17,7 +17,7 @@
 	<!--<link rel="stylesheet" href="{% static "emojionearea/emojionearea.min.css" %}" />-->
 	<link rel="stylesheet" href="{% static "css/style.css" %}" />
 </head>
-<body>
+<body data-spy="scroll" data-target="#outline">
 
 <div id="wrapper" class="container mb-3">
 {% include "include/header.html" %}
@@ -143,3 +143,4 @@
 </body>
 </html>
 {% endif %}
+{% endspaceless %}

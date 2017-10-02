@@ -25,7 +25,7 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
     form = ArticleAdminForm
-    list_display = ('title','type','pub_date','is_pub')
+    list_display = ('title','category','type','pub_date','mod_date','is_pub')
     search_fields = ('title',)
     date_hierarchy = ('pub_date')
     list_filter = ('category',)

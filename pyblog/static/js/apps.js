@@ -18,7 +18,7 @@ var auth=(function () {
 
 var siteAJAX=(function($,comments) {
     var content = $('#content');
-    var selector = 'a:not([rel*="nofollow"],[rel*="external"],[target="_blank"],[href="#"],:has(img))';
+    var selector = 'a:not([rel*="nofollow"],[rel*="external"],[target="_blank"],[href^="#"],:has(img))';
     var progress_bar = $(".header-progress-bar");
 
     var setCookie = function (v) {
@@ -35,15 +35,21 @@ var siteAJAX=(function($,comments) {
             $(this).css({'width':0});
         });
     }
+    var dataFilter = function (data) {
+        $("title").html($(data).filter('title:first').html());
+        var outline = $(data).filter('#data-outline');
+        if(outline.find('ul li').length>0){
+            $('#sidebar #outline').html(outline.html()).show();
+        }else{
+            $('#sidebar #outline').hide();
+        }
+        return $(data).not("title").not("#data-outline");
+    }
     var ajaxReg = function (){
         $("body").on('click',selector,function(e){
             e.preventDefault();
             if($(this)[0].host != document.domain){     //非本站链接跳转
                 window.open($(this)[0].href);
-                return;
-            };
-            if($(this).is('[href^="#"]')){        //本页锚点滚动
-                $("html,body").animate({scrollTop: $($(this).attr('href')).offset().top}, 300);
                 return;
             }
             progress_bar.stop(true).css({'width':0,'opacity':'.2'}).animate({"width":"20%"});
@@ -52,9 +58,8 @@ var siteAJAX=(function($,comments) {
                 context:content,
                 dataFilter:function(data) {
                     progress_bar.stop(true).animate("width","90%");
-                    $("title").html($(data).filter('title:first').html());
-                    window.history.pushState(data, null, this.url);
-                    return $(data).not("title");
+                    window.history.pushState(data, $(data).filter('title:first').html(), this.url);
+                    return dataFilter(data);
                 },
                 beforeSend:function() {
                     $(".mask").show();
@@ -67,9 +72,39 @@ var siteAJAX=(function($,comments) {
         comments.regAJAX();
         setCookie(1);
     }
+    var outline = function () {
+        var ol=$('#outline');
+        threshold();
+        if($(document).scrollTop() > ol.prev().offset().top) ol.css({'top':0,'position':'fixed'});
+        $(window).scroll(function() {
+            if($('article').length!=0 && $(document).scrollTop() > ol.prev().offset().top+ol.prev().height() && $(document).scrollTop() < $('article').offset().top+$('article').height()){
+                ol.css({'top':0,'position':'fixed'});
+            }else{
+                ol.css({'position':'relative'});
+            }
+        });
+        $(window).resize(threshold);
+        function threshold() {
+            if($(document.body).width()<1200){
+                ol.hide();
+                return
+            }else{
+                ol.css('width',$('#sidebar').width()).show();
+            }
+        }
+    }
+    var anchorScroll = function () {
+        $('body').on('click','a[href^="#"]:not([data-toggle="collapse"],[data-toggle="modal"])',function (e) {        //本页锚点平滑滚动
+            e.preventDefault();
+            $("html,body").animate({scrollTop: $($(this).attr('href')).offset().top}, 300);
+            $(this).blur();
+        });
+    }
     var init = function (ck) {
         callback=ck;
-        window.history.replaceState('<title>'+$('title:first').text()+'</title>'+content.html(), null, this.url);
+        outline();
+        anchorScroll();
+        window.history.replaceState('<title>'+$('title:first').text()+'</title>'+content.html()+'<div id="data-outline">'+$('#outline').html()+'</div>', null, this.url);
         var cookieAJAX = (function (){
             var name = "AJAX=";
             var ca = document.cookie.split(';');
@@ -96,8 +131,7 @@ var siteAJAX=(function($,comments) {
             }
         });
         window.onpopstate=function() {          //浏览器前进后退
-            $("title").html($(window.history.state).filter('title:first').html());
-            ajaxSuccess(window.history.state);
+            ajaxSuccess(dataFilter(window.history.state));
         }
     }
     return {

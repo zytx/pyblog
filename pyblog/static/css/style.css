@@ -1,5 +1,5 @@
-button, input, optgroup, select, textarea , body {
-    Font-family: STXihei,"Microsoft YaHei", SimSun,Heiti,sans-serif;
+button, input, optgroup, select, textarea, body {
+    Font-family: "Helvetica Neue", "Hiragino Sans GB", "Microsoft Yahei", Arial, sans-serif;
 }
 body {
     background-color: #DDD;
@@ -69,11 +69,22 @@ a:focus,a:hover {
     top: 0;
     left: 0;
 }
-.article-text .h4{
+.article-text h2,.article-text h3 {
+    border-bottom: #D6D6D6 1px solid;
+    background: #F3F3F3;
+}
+.article-text h2 {
     border-left: #17A2B8 .4rem solid;
-    padding-left: 1rem;
-    left: -1.5rem;
+    padding: .5rem 0 .5rem 1rem;
+    margin: 1.6rem 0 1rem 0;
     position: relative;
+    left: -1.5rem;
+    width: 103%;
+}
+.article-text h3 {
+    border-left: #17A2B8 .2rem solid;
+    padding: .4rem 0 .4rem .7rem;
+    margin: 1rem 0 .8rem 0;
 }
 .article-text img {
     max-width: 100%;
@@ -111,7 +122,7 @@ img.emojione{
 }
 .tag-list {
     background-color: #ddd;
-    margin: 2px 0;
+    margin: 2px 4px 2px 0;
     padding: 0 4px;
     color: #929292;
     display: inline-block;
@@ -120,6 +131,20 @@ img.emojione{
 .tag-list:hover, .tag-list:focus {
     background-color: #17a2b8;
     color: #fff;
+}
+#outline {
+    font-size: .9rem;
+}
+#outline .nav-pills .nav-link {
+    border-radius: 0;
+    padding: .2rem .5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#outline .nav-pills .nav-link.active, #outline .nav-pills .nav-link:hover{
+    color: #fff;
+    background-color: #17a2b8;
 }
 #footer {
     border-top: #17a2b8 3px solid;

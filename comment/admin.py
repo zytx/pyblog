@@ -7,6 +7,7 @@ from .models import Comment
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('user','nikename','content','article','date')
+    search_fields = ('user__nikename','user__email','nikename','email','content')
     class Media:
         css = {
             "all": ("comment/admin/emoji.css",
