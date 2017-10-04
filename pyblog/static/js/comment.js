@@ -95,7 +95,7 @@ var comments=(function($,emojione){
                 type: "text/css",
                 href: "/static/emojionearea/emojionearea.min.css"
             }).appendTo("head");
-            $.getScript('//cdn.jsdelivr.net/gh/mervick/emojionearea@3.1.8/dist/emojionearea.min.js',function() {
+            $.getScript('//cdn.bootcss.com/emojionearea/3.1.8/emojionearea.min.js',function() {
                 t();
             })
         }
