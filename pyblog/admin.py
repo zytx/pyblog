@@ -27,7 +27,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class ImageInline(admin.TabularInline):
     model = Image
     def preview(self,obj):
-        return '<img src="%s" height="150" />' %(obj.img.url)
+        return '<img src="%s/h150" />' %(obj.img.url)
     readonly_fields = ('preview',)
     preview.allow_tags = True
     preview.short_description = "预览"
