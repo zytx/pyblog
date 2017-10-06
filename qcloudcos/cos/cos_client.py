@@ -1,7 +1,6 @@
 # -*- coding=utf-8
 
 import requests
-import logging
 import sys
 import copy
 import xml.dom.minidom
@@ -13,13 +12,6 @@ from .cos_auth import CosS3Auth
 from .cos_exception import CosClientError,CosServiceError
 from urllib.parse import quote
 
-logging.basicConfig(
-                level=logging.INFO,
-                format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
-                datefmt='%a, %d %b %Y %H:%M:%S',
-                filename='cos_s3.log',
-                filemode='w')
-logger = logging.getLogger(__name__)
 
 maplist = {
             'ContentLength': 'Content-Length',
@@ -49,10 +41,6 @@ maplist = {
             'IfUnmodifiedSince': 'If-Unmodified-Since',
             'VersionId': 'x-cos-version-id',
            }
-
-
-def to_unicode(s):
-    return s
 
 
 def dict_to_xml(data):
@@ -152,9 +140,6 @@ class CosConfig(object):
         self._access_id = Access_id
         self._access_key = Access_key
         self._token = Token
-        logger.info("config parameter-> appid: {appid}, region: {region}".format(
-                 appid=Appid,
-                 region=Region))
 
     def uri(self, bucket, path=None):
         """拼接url"""
@@ -162,14 +147,14 @@ class CosConfig(object):
             if path[0] == '/':
                 path = path[1:]
             url = u"http://{bucket}-{uid}.{region}.myqcloud.com/{path}".format(
-                bucket=to_unicode(bucket),
+                bucket=bucket,
                 uid=self._appid,
                 region=self._region,
-                path=to_unicode(path)
+                path=path
             )
         else:
             url = u"http://{bucket}-{uid}.{region}.myqcloud.com".format(
-                bucket=to_unicode(bucket),
+                bucket=bucket,
                 uid=self._appid,
                 region=self._region
             )
@@ -212,7 +197,6 @@ class CosS3Client(object):
                 if res.status_code < 300:
                     return res
         except Exception as e:  # 捕获requests抛出的如timeout等客户端错误,转化为客户端错误
-            logger.exception('url:%s, exception:%s' % (url, str(e)))
             raise CosClientError(str(e))
         
         try:
@@ -224,13 +208,11 @@ class CosS3Client(object):
                     info['resource'] = url
                     info['requestid'] = res.headers['x-cos-request-id']
                     info['traceid'] = res.headers['x-cos-trace-id']
-                    logger.error(info)
                     raise CosServiceError(method, info, res.status_code)
                 else:
                     msg = res.text
                     if msg == '':  # 服务器没有返回Error Body时 给出头部的信息
                         msg = res.headers
-                    logger.error(msg)
                     raise CosServiceError(method, msg, res.status_code)
         except:
             pass
@@ -245,9 +227,6 @@ class CosS3Client(object):
             headers.pop('Metadata')
 
         url = self._conf.uri(bucket=Bucket, path=Key)
-        logger.info("put object, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
             method='PUT',
             url=url,
@@ -263,9 +242,6 @@ class CosS3Client(object):
         """单文件下载接口"""
         headers = mapped(kwargs)
         url = self._conf.uri(bucket=Bucket, path=Key)
-        logger.info("get object, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
                 method='GET',
                 url=url,
@@ -291,9 +267,6 @@ class CosS3Client(object):
         """单文件删除接口"""
         headers = mapped(kwargs)
         url = self._conf.uri(bucket=Bucket, path=Key)
-        logger.info("delete object, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
                 method='DELETE',
                 url=url,
@@ -305,9 +278,6 @@ class CosS3Client(object):
         """获取文件信息"""
         headers = mapped(kwargs)
         url = self._conf.uri(bucket=Bucket, path=Key)
-        logger.info("head object, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
             method='HEAD',
             url=url,
@@ -335,9 +305,6 @@ class CosS3Client(object):
         headers['x-cos-copy-source'] = self.gen_copy_source_url(CopySource)
         headers['x-cos-metadata-directive'] = CopyStatus
         url = self._conf.uri(bucket=Bucket, path=Key)
-        logger.info("copy object, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
             method='PUT',
             url=url,
@@ -355,9 +322,6 @@ class CosS3Client(object):
             headers.pop('Metadata')
 
         url = self._conf.uri(bucket=Bucket, path=Key+"?uploads")
-        logger.info("create multipart upload, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
                 method='POST',
                 url=url,
@@ -373,9 +337,6 @@ class CosS3Client(object):
         url = self._conf.uri(bucket=Bucket, path=Key+"?partNumber={PartNumber}&uploadId={UploadId}".format(
             PartNumber=PartNumber,
             UploadId=UploadId))
-        logger.info("put object, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
                 method='PUT',
                 url=url,
@@ -390,9 +351,6 @@ class CosS3Client(object):
         """完成分片上传，组装后的文件不得小于1MB,否则会返回错误"""
         headers = mapped(kwargs)
         url = self._conf.uri(bucket=Bucket, path=Key+"?uploadId={UploadId}".format(UploadId=UploadId))
-        logger.info("complete multipart upload, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
                 method='POST',
                 url=url,
@@ -407,9 +365,6 @@ class CosS3Client(object):
         """放弃一个已经存在的分片上传任务，删除所有已经存在的分片"""
         headers = mapped(kwargs)
         url = self._conf.uri(bucket=Bucket, path=Key+"?uploadId={UploadId}".format(UploadId=UploadId))
-        logger.info("abort multipart upload, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
                 method='DELETE',
                 url=url,
@@ -427,9 +382,6 @@ class CosS3Client(object):
             'encoding-type': EncodingType}
 
         url = self._conf.uri(bucket=Bucket, path=Key)
-        logger.info("list multipart upload, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
                 method='GET',
                 url=url,
@@ -447,9 +399,6 @@ class CosS3Client(object):
         """设置object ACL"""
         headers = mapped(kwargs)
         url = self._conf.uri(bucket=Bucket, path=Key+"?acl")
-        logger.info("put object acl, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
             method='PUT',
             url=url,
@@ -461,9 +410,6 @@ class CosS3Client(object):
         """获取object ACL"""
         headers = mapped(kwargs)
         url = self._conf.uri(bucket=Bucket, path=Key+"?acl")
-        logger.info("get object acl, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
             method='GET',
             url=url,
@@ -481,9 +427,6 @@ class CosS3Client(object):
         """创建一个bucket"""
         headers = mapped(kwargs)
         url = self._conf.uri(bucket=Bucket)
-        logger.info("create bucket, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
                 method='PUT',
                 url=url,
@@ -495,9 +438,6 @@ class CosS3Client(object):
         """删除一个bucket，bucket必须为空"""
         headers = mapped(kwargs)
         url = self._conf.uri(bucket=Bucket)
-        logger.info("delete bucket, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
                 method='DELETE',
                 url=url,
@@ -509,9 +449,6 @@ class CosS3Client(object):
         """获取文件列表"""
         headers = mapped(kwargs)
         url = self._conf.uri(bucket=Bucket)
-        logger.info("list objects, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         params = {
             'delimiter': Delimiter,
             'marker': Marker,
@@ -536,9 +473,6 @@ class CosS3Client(object):
         """获取bucket信息"""
         headers = mapped(kwargs)
         url = self._conf.uri(bucket=Bucket)
-        logger.info("head bucket, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
             method='HEAD',
             url=url,
@@ -550,9 +484,6 @@ class CosS3Client(object):
         """设置bucket ACL"""
         headers = mapped(kwargs)
         url = self._conf.uri(bucket=Bucket, path="?acl")
-        logger.info("put bucket acl, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
             method='PUT',
             url=url,
@@ -564,9 +495,6 @@ class CosS3Client(object):
         """获取bucket ACL"""
         headers = mapped(kwargs)
         url = self._conf.uri(bucket=Bucket, path="?acl")
-        logger.info("get bucket acl, url=:{url} ,headers=:{headers}".format(
-            url=url,
-            headers=headers))
         rt = self.send_request(
             method='GET',
             url=url,
