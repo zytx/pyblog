@@ -1,10 +1,12 @@
 from django.db import models
-import django.utils.timezone as timezone
+from django.utils import timezone
+from pyblog.models import Article
 
 # Create your models here.
 
 class Image(models.Model):
     img = models.ImageField(upload_to=timezone.localdate().strftime('%Y/%m/%d'))
+    rel = models.ForeignKey(Article, verbose_name = '文章', blank=True, null=True)
     class Meta:
         verbose_name = '图片'
         verbose_name_plural = '图片'

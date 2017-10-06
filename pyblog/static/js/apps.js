@@ -142,7 +142,8 @@ var siteAJAX=(function($,comments) {
 
 function modelInit() {
     $('#reward-modal').on('show.bs.modal',function(e){
-        $(this).find('#alipay').attr('src','/static/img/alipay.gif');
+        ali = $(this).find('#alipay');
+        ali.attr('src',ali.attr('data-src'));
     });
 }
 

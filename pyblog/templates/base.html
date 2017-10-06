@@ -16,6 +16,7 @@
 	<!--<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/mervick/emojionearea@3.1.8/dist/emojionearea.min.css" />-->
 	<!--<link rel="stylesheet" href="{% static "emojionearea/emojionearea.min.css" %}" />-->
 	<link rel="stylesheet" href="{% static "css/style.css" %}" />
+	<link rel="shortcut icon" href="{% static "favicon.ico" %}" />
 </head>
 <body data-spy="scroll" data-target="#outline">
 
@@ -45,7 +46,7 @@
 				</button>
 			</div>
 			<div class="modal-body text-center">
-				<img id="alipay" src="" height="200"/>
+				<img id="alipay" data-src="{% static 'img/alipay.gif' %}" height="200"/>
 				<br>支付宝
 			</div>
 		</div>
