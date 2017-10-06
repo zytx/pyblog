@@ -1,7 +1,5 @@
 from django.contrib import admin
-from django.db import models
 from editormd.models import Image
-from django.core.files.storage import default_storage
 
 # Register your models here.
 
