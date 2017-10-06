@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.db import models
-from editormd.widget import EditormdWidget
 from .models import Tag,Category,Article
 from .forms import ArticleAdminForm
 from django import forms
+from editormd.models import Image
+from editormd.admin import ImageAdmin
+
 
 admin.site.site_header = "Administration"
 admin.site.site_title = "Mr.Z's Blog"
@@ -22,6 +24,15 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
 
 
+class ImageInline(admin.TabularInline):
+    model = Image
+    def preview(self,obj):
+        return '<img src="%s" height="150" />' %(obj.img.url)
+    readonly_fields = ('preview',)
+    preview.allow_tags = True
+    preview.short_description = "预览"
+
+
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
     form = ArticleAdminForm
@@ -30,8 +41,7 @@ class ArticleAdmin(admin.ModelAdmin):
     date_hierarchy = ('pub_date')
     list_filter = ('category',)
     filter_horizontal = ('tags',)
-    formfield_overrides = {
-        models.TextField: {'widget': EditormdWidget()},
-    }
     prepopulated_fields = {"slug": ("title",)}
-
+    inlines = [
+            ImageInline,
+        ]

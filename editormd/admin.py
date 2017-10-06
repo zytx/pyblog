@@ -6,7 +6,7 @@ from django.core.files.storage import default_storage
 # Register your models here.
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ('preview','img','rel')
+    list_display = ('preview', 'img', 'rel')
     readonly_fields = ('preview',)
     search_fields = ('img',)
     def preview(self,obj):

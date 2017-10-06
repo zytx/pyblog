@@ -5,7 +5,7 @@ from pyblog.models import Article
 # Create your models here.
 
 class Image(models.Model):
-    img = models.ImageField(upload_to=timezone.localdate().strftime('%Y/%m/%d'))
+    img = models.ImageField(verbose_name = '图片', upload_to=timezone.localdate().strftime('%Y/%m/%d'))
     rel = models.ForeignKey(Article, verbose_name = '文章', blank=True, null=True)
     class Meta:
         verbose_name = '图片'
