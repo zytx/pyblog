@@ -2,6 +2,7 @@ from django import template
 from django.conf import settings
 from django.utils.html import mark_safe
 import mistune
+import re
 from pyblog.models import Article,Category,Tag
 from django.db.models import Count
 
@@ -15,6 +16,7 @@ class Renderer(mistune.Renderer):
         global outline
         outline=[]
         self.h_counter=0
+        self.h_pattern = re.compile(r'<([\w]+) [^>]+.*\1>')
         super(__class__,self).__init__()
 
     def block_code(self, code, lang):
@@ -30,15 +32,16 @@ class Renderer(mistune.Renderer):
         :param level: a number for the header level, for example: 1.
         :param raw: raw text content of the header.
         """
+        clean = self.h_pattern.sub('',text)
         if level==2:
-            outline.append(text)
+            outline.append(clean)
             self.h_last=2
             self.h_counter+=1
         elif level==3:
             if self.h_last==3:
-                outline[-1].append(text)
+                outline[-1].append(clean)
             else:
-                outline.append([text,])
+                outline.append([clean,])
             self.h_last=3
             self.h_counter+=1
         if level in (2,3):
