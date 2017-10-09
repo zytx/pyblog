@@ -11,5 +11,5 @@ class ArticleAdminForm(forms.ModelForm):
             'desc': forms.Textarea(),
             'content': EditormdWidget(),
         }
-        fields = '__all__'
-        #exclude = ['author']
+        #fields = '__all__'
+        exclude = ['author']

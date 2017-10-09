@@ -5,6 +5,7 @@ from .forms import ArticleAdminForm
 from django import forms
 from editormd.models import Image
 from editormd.admin import ImageAdmin
+from django.utils.safestring import mark_safe
 
 
 admin.site.site_header = "Administration"
@@ -26,10 +27,10 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class ImageInline(admin.TabularInline):
     model = Image
-    def preview(self,obj):
-        return '<img src="%s/h150" />' %(obj.img.url)
     readonly_fields = ('preview',)
-    preview.allow_tags = True
+
+    def preview(self,obj):
+        return mark_safe('<img src="%s/h150" />' %(obj.img.url))
     preview.short_description = "预览"
 
 
@@ -37,11 +38,24 @@ class ImageInline(admin.TabularInline):
 class ArticleAdmin(admin.ModelAdmin):
     form = ArticleAdminForm
     list_display = ('title','category','type','pub_date','mod_date','is_pub')
+    readonly_fields = ('author_info',)
     search_fields = ('title',)
     date_hierarchy = ('pub_date')
     list_filter = ('category',)
+    list_editable = ('category','type')
     filter_horizontal = ('tags',)
     prepopulated_fields = {"slug": ("title",)}
     inlines = [
             ImageInline,
         ]
+
+    def save_model(self, request, obj, form, change):
+        '''
+        保存文章时自动添加作者
+        '''
+        obj.author = request.user
+        super(ArticleAdmin, self).save_model(request, obj, form, change)
+
+    def author_info(self, obj):
+        return mark_safe('昵称: %s<br/>邮箱: %s' % (obj.author.nikename,obj.author.email))
+    author_info.short_description = '作者'
