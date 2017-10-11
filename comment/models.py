@@ -1,12 +1,18 @@
 from django.db import models
 from django.conf import settings
 from pyblog.models import Article
-from django.core.mail import send_mail
+from django.core.mail import send_mail,EmailMultiAlternatives
+from django.template import loader
 from collections import OrderedDict
+import threading
 
 # Create your models here.
 
 class Comment(models.Model):
+    '''
+    嵌套评论模型
+    匿名/登录
+    '''
     user = models.ForeignKey(settings.AUTH_USER_MODEL,verbose_name='用户',null=True, blank=True)
 
     nikename = models.CharField('昵称',null=True, blank=True,max_length=30)
@@ -34,16 +40,30 @@ class Comment(models.Model):
         return self.content[:30]
 
     def get_nikename(self):
+        '''
+        获取评论者昵称
+        '''
         return self.nikename if self.nikename else self.user.nikename
 
     def get_email(self):
+        '''
+        获取评论者邮箱
+        '''
         return self.email if self.email else self.user.email
 
     def get_url(self):
+        '''
+        获取评论者URL
+        '''
         return self.url if self.url else self.user.url if self.user else None
 
     @staticmethod
     def get_comment_list(article):
+        '''
+        获取评论列表
+
+        :param article: 外键文章
+        '''
         q = Comment.objects.select_related('user','parent','at__user').order_by('parent','date').filter(article=article,is_pub=True).defer('allow_email','article','is_pub','ip','ua')
         comments = OrderedDict()
         for comment in q:
@@ -56,11 +76,26 @@ class Comment(models.Model):
                 comments[comment.parent.id]['reply'].append(comment)
         return comments
 
-    def send_email(self,recipient_list):
-        send_mail(
-            "您在Mr.Z's Blog 的评论有了新回复",
-            '%s 说：%s' % (self.get_nikename(),self.content),
-            settings.DEFAULT_FROM_EMAIL,
-            recipient_list,
-            fail_silently=False,
-        )
+    def send_email(self, to, path):
+        '''
+        邮件通知，多线程异步发送
+        通过模板加载HTML正文
+
+        :param to: 发送到地址列表
+        '''
+        subject = '您在' + settings.SITE_TITLE + '的评论有了新回复'
+        content = loader.render_to_string(      #渲染html模板
+                 '../templates/email.html',
+                 {
+                    'from_user': self.get_nikename(),
+                    'content'  : self.content,
+                    'back_url' : 'http://%s%s' % (settings.EMAIL_BACK_DOMAIN,path),
+                 }
+           )
+        from_email = settings.DEFAULT_FROM_EMAIL
+
+        def send(*args, **kwargs):
+            msg = EmailMultiAlternatives(*args, **kwargs)
+            msg.content_subtype = "html"
+            msg.send()
+        threading.Thread(target=send,args=(subject, content, from_email, to)).start()
