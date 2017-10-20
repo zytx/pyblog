@@ -15,7 +15,6 @@ class Renderer(mistune.Renderer):
     def __init__(self):
         global outline
         outline=[]
-        self.h_counter=0
         self.h_pattern = re.compile(r'<([\w]+) [^>]+.*\1>')
         super(__class__,self).__init__()
 
@@ -32,20 +31,17 @@ class Renderer(mistune.Renderer):
         :param level: a number for the header level, for example: 1.
         :param raw: raw text content of the header.
         """
-        clean = self.h_pattern.sub('',text)
-        if level==2:
-            outline.append(clean)
-            self.h_last=2
-            self.h_counter+=1
-        elif level==3:
-            if self.h_last==3:
-                outline[-1].append(clean)
+        if level == 2:
+            clean_text = self.h_pattern.sub('',text)
+            outline.append([clean_text,])
+            return '<h%d id="h-%d" class="h%d">%d. %s</h%d>\n' % (level, len(outline), level+3, len(outline), text, level)
+        elif level == 3:
+            clean_text = self.h_pattern.sub('',text)
+            if len(outline[-1]) >= 2:
+                outline[-1][-1].append(clean_text)
             else:
-                outline.append([clean,])
-            self.h_last=3
-            self.h_counter+=1
-        if level in (2,3):
-            return '<h%d id="h-%d" class="h%d">%s</h%d>\n' % (level, self.h_counter, level+3, text, level)
+                outline[-1].append([clean_text,])
+            return '<h%d id="h-%d-%d" class="h%d">%d.%d. %s</h%d>\n' % (level, len(outline), len(outline[-1][-1]), level+3, len(outline), len(outline[-1][-1]), text, level)
         else:
             return '<h%d class="h%d">%s</h%d>\n' % (level, level+3, text, level)
 
@@ -94,6 +90,7 @@ class Renderer(mistune.Renderer):
             '<tbody>\n%s</tbody>\n</table>\n'
         ) % (header, body)
 
+
 @register.filter()
 def markdown(text):
     md = mistune.Markdown(escape=False,renderer=Renderer(),hard_wrap=True) #hard_wrap:回车换行
@@ -124,16 +121,13 @@ def outline():
     if len(outline) == 0 : 
         return ''
     result='<h4 class="pb-2">目录</h4><ul class="nav nav-pills flex-column text-truncate">'
-    counter = 0
-    for item in outline:
-        if isinstance(item,list):
-            result+='<ul class="nav nav-pills flex-column ml-3">'
-            for i in item:
-                counter+=1
-                result+='<li><a class="nav-link" href="#h-%d">%s</a></li>' % (counter,i)
-            result+='</ul>'
-        else:
-            counter+=1
-            result+='<li><a class="nav-link" href="#h-%d">%s</a></li>' % (counter,item)
-    result+='</ul>'
+    for index_h2, item in enumerate(outline, 1):
+        result += '<li><a class="nav-link" href="#h-%d">%d. %s</a>' % (index_h2, index_h2, item[0])
+        if len(item) >= 2:
+            result += '<ul class="nav nav-pills flex-column ml-3 d-none">'
+            for index_h3, text in enumerate(item[1], 1):
+                result += '<li><a class="nav-link" href="#h-%d-%d">%d.%d. %s</a></li>' % (index_h2, index_h3, index_h2, index_h3, text)
+            result += '</ul>'
+        result += '</li>'
+    result += '</ul>'
     return mark_safe(result)

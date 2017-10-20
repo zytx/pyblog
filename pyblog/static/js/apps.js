@@ -73,8 +73,12 @@ var siteAJAX=(function($,comments) {
         setCookie(1);
     }
     var outline = function () {
+        /**
+         * 侧边栏文章提纲
+         * */
         var ol=$('#outline');
         threshold();
+        // 跟随滚动
         if($(document).scrollTop() > ol.prev().offset().top) ol.css({'top':0,'position':'fixed'});
         $(window).scroll(function() {
             if($('article').length!=0 && $(document).scrollTop() > ol.prev().offset().top+ol.prev().height() && $(document).scrollTop() < $('article').offset().top+$('article').height()){
@@ -86,12 +90,21 @@ var siteAJAX=(function($,comments) {
         $(window).resize(threshold);
         function threshold() {
             if($(document.body).width()<1200){
+                // 小屏隐藏
                 ol.hide();
                 return
             }else{
+                // 设置宽度
                 ol.css('width',$('#sidebar').width()).show();
             }
         }
+        // 二级标题自动折叠
+        $(window).on('activate.bs.scrollspy', function (event) {
+            ol.find('ul ul').addClass('d-none');
+            if(ol.find('.active:first-child').next().is('ul')){
+                ol.find('.active:first-child').next().removeClass('d-none');
+            }
+        })
     }
     var anchorScroll = function () {
         $('body').on('click','a[href^="#"]:not([data-toggle="collapse"],[data-toggle="modal"])',function (e) {        //本页锚点平滑滚动
