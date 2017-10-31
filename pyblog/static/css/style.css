@@ -147,6 +147,10 @@ img.emojione{
     color: #fff;
     background-color: #17a2b8;
 }
+#outline > ul.nav > li > ul {
+    border-left: 1px #17A2B8 solid;
+}
+
 #footer {
     border-top: #17a2b8 3px solid;
 }

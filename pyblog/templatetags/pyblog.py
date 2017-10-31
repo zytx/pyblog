@@ -122,11 +122,11 @@ def outline():
         return ''
     result='<h4 class="pb-2">目录</h4><ul class="nav nav-pills flex-column text-truncate">'
     for index_h2, item in enumerate(outline, 1):
-        result += '<li><a class="nav-link" href="#h-%d">%d. %s</a>' % (index_h2, index_h2, item[0])
+        result += '<li><a class="nav-link" title="%s" href="#h-%d">%d. %s</a>' % (item[0], index_h2, index_h2, item[0])
         if len(item) >= 2:
             result += '<ul class="nav nav-pills flex-column ml-3 d-none">'
             for index_h3, text in enumerate(item[1], 1):
-                result += '<li><a class="nav-link" href="#h-%d-%d">%d.%d. %s</a></li>' % (index_h2, index_h3, index_h2, index_h3, text)
+                result += '<li><a class="nav-link" title="%s" href="#h-%d-%d">%d.%d. %s</a></li>' % (text, index_h2, index_h3, index_h2, index_h3, text)
             result += '</ul>'
         result += '</li>'
     result += '</ul>'
