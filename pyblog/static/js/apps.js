@@ -76,7 +76,7 @@ var siteAJAX=(function($,comments) {
         /**
          * 侧边栏文章提纲
          * */
-        var ol=$('#outline');
+        var ol = $('#outline');
         threshold();
         // 跟随滚动
         if($(document).scrollTop() > ol.prev().offset().top) ol.css({'top':0,'position':'fixed'});
@@ -99,11 +99,17 @@ var siteAJAX=(function($,comments) {
             }
         }
         // 二级标题自动折叠
+        var timer = null;
         $(window).on('activate.bs.scrollspy', function (event) {
-            ol.find('ul ul').addClass('d-none');
-            if(ol.find('.active:first-child').next().is('ul')){
-                ol.find('.active:first-child').next().removeClass('d-none');
+            if (timer) {
+              window.clearTimeout(timer);
             }
+            timer = window.setTimeout(function () {
+                ol.find('ul ul').addClass('d-none');
+                if(ol.find('.active:first-child').next().is('ul')){
+                    ol.find('.active:first-child').next().removeClass('d-none');
+                }
+        	}, 50);
         })
     }
     var anchorScroll = function () {
