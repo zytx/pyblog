@@ -1,13 +1,21 @@
 from django.db import models
 from django.utils import timezone
 from pyblog.models import Article
-from django.db.models.signals import pre_save,pre_delete
+from django.db.models.signals import pre_save,post_delete
 from django.dispatch.dispatcher import receiver
+import time
+import os
+
 
 # Create your models here.
 
+
+def img_path(instance, filename):
+    return 'img/{0}/{1}{2}'.format(timezone.localdate().strftime('%Y/%m/%d'), int(round(time.time() * 1000)), os.path.splitext(filename)[1])
+
+
 class Image(models.Model):
-    img = models.ImageField(verbose_name = '图片', upload_to=timezone.localdate().strftime('%Y/%m/%d'))
+    img = models.ImageField(verbose_name = '图片', upload_to = img_path)
     rel = models.ForeignKey(Article, verbose_name = '文章', blank=True, null=True)
 
     class Meta:
@@ -28,7 +36,7 @@ def mymodel_update(sender, instance, **kwargs):
         old.img.delete(False)
 
 
-@receiver(pre_delete, sender=Image)
+@receiver(post_delete, sender=Image)
 def mymodel_delete(sender, instance, **kwargs):
     '''
     文件随数据库删除
