@@ -80,6 +80,10 @@ class QcloudStorage(Storage):
 
     def url(self, name):
         name = self._normalize_name(name)
+
+        if self.option.get('domain',False):
+            return self.option['domain'] + name
+
         region = self.option['region']
 
         if self.option.get('ci') and self.option.get('cdn'):

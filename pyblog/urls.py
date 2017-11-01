@@ -24,9 +24,6 @@ urlpatterns = [
     url(r'^$', views.Index.as_view(),name='index'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^archive/$',views.Archive.as_view(),name='archive'),
-
-    url(r'^media/(?P<path>.*)/$', serve, {'document_root':settings.MEDIA_ROOT}),
-    
     url(r'^tag/(?P<slug>[0-9a-z-]+)/$',views.TagList.as_view(),name='tag'),
     url(r'^category/(?P<slug>[0-9a-z-]+)/$',views.CategoryList.as_view(),name='category'),
     
