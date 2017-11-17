@@ -53,12 +53,13 @@ var siteAJAX=(function($,comments) {
                 return;
             }
             progress_bar.stop(true).css({'width':0,'opacity':'.2'}).animate({"width":"20%"});
+            var new_url = this
             $.ajax({
-                url:this,
+                url:new_url+'?ajax=1',
                 context:content,
                 dataFilter:function(data) {
                     progress_bar.stop(true).animate("width","90%");
-                    window.history.pushState(data, $(data).filter('title:first').html(), this.url);
+                    window.history.pushState(data, $(data).filter('title:first').html(), new_url);
                     return dataFilter(data);
                 },
                 beforeSend:function() {
