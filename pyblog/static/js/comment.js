@@ -93,7 +93,7 @@ var comments=(function($,emojione){
             $("<link>").attr({
                 rel: "stylesheet",
                 type: "text/css",
-                href: "/static/emojionearea/emojionearea.min.css"
+                href: "//cdn.bootcss.com/emojionearea/3.1.8/emojionearea.min.css"
             }).appendTo("head");
             $.getScript('//cdn.bootcss.com/emojionearea/3.1.8/emojionearea.min.js',function() {
                 t();
