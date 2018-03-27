@@ -69,11 +69,11 @@
         <textarea class="form-control rounded-0{% if commentForm.content.errors %} is-invalid{% endif %}" rows="5" name="{{commentForm.content.name}}" placeholder="Tell me about your dreams.">{% firstof commentForm.content.value %}</textarea>
         <div class="invalid-feedback">{% firstof commentForm.content.errors.0 %}</div>
     </div>
-    <div class="form-check">
-        <label class="form-check-label"><input type="checkbox" class="form-check-input" name="{{commentForm.allow_email.name}}"{%if commentForm.allow_email.value %} checked="checked"{%endif%}>有回复时通过邮件通知我</label>
-    </div>
     <div class="form-group">
-        <button id="comment-submit" class="btn btn-info rounded-0 mr-2" type="submit">提交</button>
-        <span id="comment-success" class="text-success"></span>
+        <div class="form-check">
+            <label class="form-check-label"><input type="checkbox" class="form-check-input" name="{{commentForm.allow_email.name}}"{%if commentForm.allow_email.value %} checked="checked"{%endif%}>有回复时通过邮件通知我</label>
+        </div>
     </div>
+    <button id="comment-submit" class="btn btn-info rounded-0 mr-2" type="submit">提交</button>
+    <span id="comment-success" class="text-success"></span>
 </form>

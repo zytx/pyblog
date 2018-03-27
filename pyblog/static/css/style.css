@@ -39,13 +39,10 @@ a:focus,a:hover {
 #header-navbar .navbar-nav .nav-link:hover {
     background-color: #17a2b8;
 }
-#header-navbar .custom-control {
-    cursor:pointer;
-}
-#header-navbar .custom-control-indicator {
-    background-color: rgba(0,0,0,0);
+#header-navbar .custom-control-label::before {
+    background-color: transparent;
     border: 1px #fff solid;
-    position: relative;
+    cursor: pointer;
 }
 #header-navbar .header-progress-bar {
     float: left;

@@ -29,15 +29,10 @@
                 <a class="nav-item nav-link p-3" href="{% url 'index' %}">首页</a>
                 <a class="nav-item nav-link p-3" href="{% url 'archive' %}">归档</a>
             </div>
-        <!--<form class="form-inline">-->
-        <!--    <input class="form-control mr-sm-2" type="text" placeholder="搜索">-->
-        <!--    <button class="btn btn-outline-info" type="submit">Search</button>-->
-        <!--</form>-->
-        <label class="custom-control custom-checkbox mt-2">
-          <input id="ajax-checkbox" type="checkbox" class="custom-control-input"{% if request.COOKIES.AJAX != '0' %} checked{% endif %}>
-          <span class="custom-control-description text-white mr-2">AJAX</span>
-          <span class="custom-control-indicator"></span>
-        </label>
+            <div class="custom-control custom-checkbox">
+                <input id="ajax-checkbox" type="checkbox" class="custom-control-input"{% if request.COOKIES.AJAX != '0' %} checked{% endif %}>
+                <label class="custom-control-label text-white mr-3" for="ajax-checkbox">AJAX</label>
+            </div>
         </div>
     </nav>
 
