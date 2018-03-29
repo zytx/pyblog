@@ -13,8 +13,31 @@ var comments=(function($,emojione){
     };
     var comment = {
         list:'#comment-list',
-        reply:'.comment-reply',
-    }
+        reply:'.comment-reply'
+    };
+    initLazyLoad();
+    lazyLoadBrow();
+    lazyLoadEmojiTextArea();
+    content.on('click',comment.reply,function(){
+        if ($(this).text()=='Reply'){
+            $(form.self).prev().find(comment.reply).text('Reply');
+            $(this).text('Cancel');
+            $(form.to).val($(this).attr('data-to'));
+            $(this).closest('.media').find('.comment-text').first().after($(form.self));
+        }else{
+            $(comment.list).after($(form.self));
+            $(this).text('Reply');
+            $(form.to).val('');
+        }
+    }).on('blur',form.email,function(){
+        var avatar=function(){$(form.avatar).attr('src','//cdn.v2ex.com/gravatar/'+ md5($(form.email).val()) +'?s=130&d=retro')};
+        if(typeof md5 !== 'undefined' && $.isFunction(md5)){
+            avatar();
+        }else{
+            $.getScript('//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js',function(){avatar()});
+        }
+    });
+
     function regAJAX() {
         content.on('submit',form.self,function(e){
             e.preventDefault();
@@ -25,7 +48,6 @@ var comments=(function($,emojione){
                 $(form.self).find(".form-control.is-invalid").removeClass('is-invalid');
                 if(re['status']){                                           //评论成功
                     $("#comment-success").html('评论成功');                  //插入新评论
-                    var ml = 0;
                     $(form.self).before('<div class="media my-2">\
                     <img class="avatar d-flex mt-1 mr-2" width="60px" src="'+ $(form.avatar).attr('src') +'">\
                     <div class="media-body">'+emojione.unicodeToImage($(form.nikename).val()||$(form.nikename2).text())+'\
@@ -43,76 +65,49 @@ var comments=(function($,emojione){
             },'json');
         });
     }
-    function offAJAX() {
-        content.off('submit');
-    }
-    function init() {
-        autoload();
-        content.on('click',comment.reply,function(){
-            if ($(this).text()=='Reply'){
-                $(form.self).prev().find(comment.reply).text('Reply');
-                $(this).text('Cancel');
-                $(form.to).val($(this).attr('data-to'));
-                $(this).closest('.media').find('.comment-text').first().after($(form.self));
-            }else{
-                $(comment.list).after($(form.self));
-                $(this).text('Reply');
-                $(form.to).val('');
-            }
-        }).on('blur',form.email,function(){
-            var avatar=function(){$(form.avatar).attr('src','//cdn.v2ex.com/gravatar/'+ md5($(form.email).val()) +'?s=130&d=retro')}
-            if(typeof md5 !== 'undefined' && $.isFunction(md5)){
-                avatar();
-            }else{
-                $.getScript('//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js',function(){avatar()});
-            }
-        });
-    }
-    function brow() {
-        if(!$(comment.list).hasClass('emojied')){
+    function lazyLoadBrow() {
+        if($(document).scrollTop()+$(window).height()>$(comment.list).offset().top){
+            $(window).off('scroll', lazyLoadBrow);
             $('.comment-text,.comment-nikename,#comment-form-nikename').each(function(){      //渲染评论表情
                 $(this).html(emojione.unicodeToImage($(this).html()));
             });
-            $(comment.list).addClass('emojied');
         }
     }
-    function textArea() {
-        var t=function() {
-            $("#comment-form textarea").emojioneArea({          //渲染评论文本框
-                template        : "<filters/><tabs/><editor/>",
-                tonesStyle      : "radio",
-                imageType       : "svg",
-                autocomplete    : false,    //关闭自动补全
-                useInternalCDN  : false,      //关闭cloudflare CDN
-                buttonTitle     : '表情[Tab]'
-            });
-        }
-        if(typeof $().emojioneArea !== 'undefined' && $.isFunction($().emojioneArea)){
-            t();
-        }else{
-            $.getScript('//cdn.bootcss.com/emojionearea/3.1.8/emojionearea.min.js',function() {
-                t();
-            })
-        }
-
-    }
-    function autoload() {
-        if($(comment.list).length<=0)return;
-        if($(document).scrollTop()+$(window).height()>$(comment.list).offset().top){
-            brow();
-        }
+    function lazyLoadEmojiTextArea() {
         if($(document).scrollTop()+$(window).height()>$(form.self).offset().top){
-            textArea();
+            $(window).off('scroll', lazyLoadEmojiTextArea);
+            var t=function() {
+                $("#comment-form textarea").emojioneArea({          //渲染评论文本框
+                    tonesStyle: 'radio',
+                    autocomplete: false,    //关闭自动补全
+                    searchPlaceholder: '搜索',
+                    buttonTitle: '表情[Tab]'
+                });
+            };
+            if(typeof $().emojioneArea !== 'undefined' && $.isFunction($().emojioneArea)){
+                t();
+            }else if(!$('#css-emojionearea').length){
+                $("<link>").attr({
+                    id: "css-emojionearea",
+                    rel: "stylesheet",
+                    type: "text/css",
+                    href: "//cdn.bootcss.com/emojionearea/3.4.1/emojionearea.min.css"
+                }).prependTo("head");
+                $.getScript('//cdn.bootcss.com/emojionearea/3.4.1/emojionearea.min.js',function() {
+                    t();
+                })
+            }
         }
+    }
+    function initLazyLoad() {
+        $(window).off('scroll',lazyLoadBrow).scroll(lazyLoadBrow);
+        $(window).off('scroll',lazyLoadEmojiTextArea).scroll(lazyLoadEmojiTextArea);
     }
     return {
-        'regAJAX' :regAJAX,
-        'offAJAX' :offAJAX,
-        'autoload':autoload,
-        'init'    :init
+        'regAJAX': regAJAX,
+        'offAJAX': function () {
+            content.off('submit');
+        },
+        'initLazyLoad': initLazyLoad
     };
 })(jQuery,emojione);
-
-$(window).scroll(function() {
-    comments.autoload();
-});

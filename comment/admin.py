@@ -12,13 +12,13 @@ class CommentAdmin(admin.ModelAdmin):
 
     class Media:
         css = {
-            "all": ("comment/admin/emoji.css",
-                "//cdn.jsdelivr.net/gh/mervick/emojionearea@3.1.8/dist/emojionearea.min.css"
+            "all": (
+                "comment/admin/emoji.css",
+                "//cdn.jsdelivr.net/npm/emojionearea@3/dist/emojionearea.min.css"
             )
         }
-        js = ("//cdn.bootcss.com/jquery/3.2.1/jquery.min.js",
-            "//cdn.bootcss.com/emojione/2.2.7/lib/js/emojione.min.js",
-            "//cdn.jsdelivr.net/gh/mervick/emojionearea@3.1.8/dist/emojionearea.min.js",
+        js = (
+            "//cdn.jsdelivr.net/combine/npm/jquery@3,npm/emojione@3,npm/emojionearea@3",
             "comment/admin/emoji.js",
         )
 

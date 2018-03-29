@@ -3,7 +3,6 @@ button, input, optgroup, select, textarea, body {
 }
 body {
     background-color: #DDD;
-    /*color: #444;*/
 }
 a {
     color: #17a2b8;
@@ -15,9 +14,6 @@ a {
 a:focus,a:hover {
     text-decoration: none;
     color: #dc3545;
-}
-.emoji {
-    width:1rem;
 }
 #wrapper {
     background-color: #F9F9F9;
@@ -38,6 +34,9 @@ a:focus,a:hover {
 }
 #header-navbar .navbar-nav .nav-link:hover {
     background-color: #17a2b8;
+}
+#header-navbar .custom-control-label {
+    cursor: pointer;
 }
 #header-navbar .custom-control-label::before {
     background-color: transparent;
@@ -87,6 +86,9 @@ a:focus,a:hover {
 .article-text img {
     max-width: 100%;
 }
+/**
+ * 评论
+ */
 #comment-list .comment-reply {
     cursor:pointer;
     color: #17a2b8;
@@ -106,7 +108,12 @@ a:focus,a:hover {
 img.emojione{
     width:auto
 }
-
+.emojionearea, .emojionearea.form-control {
+    font-size: 1rem;
+}
+.emojionearea .emojionearea-editor:empty:before {
+    color: #888;
+}
 /**
 *  Sidebar
 */
