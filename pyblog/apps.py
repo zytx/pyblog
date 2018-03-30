@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 
 
-class PyblogConfig(AppConfig):
+class PyBlogConfig(AppConfig):
     name = 'pyblog'
+    verbose_name = '博客'

@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $('#id_g_nikename, td.field-g_nikename, td.field-content, .breadcrumbs').each(function(){      //渲染评论表情
+    $('#id_g_nickname, td.field-g_nickname, td.field-content, .breadcrumbs').each(function(){      //渲染评论表情
         $(this).html(emojione.unicodeToImage($(this).html()));
     });
     $("#id_content").emojioneArea({          //渲染评论文本框

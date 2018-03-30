@@ -195,7 +195,7 @@ $(document).ready(function(){
         ali = $(this).find('#alipay');
         ali.attr('src',ali.attr('data-src'));
     });
-    $('#header .nikename').html(function(){
+    $('#header .nickname').html(function(){
         return emojione.unicodeToImage($(this).html());
     });
     $('.modal').keydown(function(e){

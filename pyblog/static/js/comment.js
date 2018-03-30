@@ -3,8 +3,8 @@ var comments=(function($,emojione){
     var form = {
         self:'#comment-form',
         to:'input[name="to"]',
-        nikename:'input[name="nikename"]',
-        nikename2:'#comment-form .comment-nikename',
+        nickname:'input[name="nickname"]',
+        nickname2:'#comment-form .comment-nickname',
         email:'input[name="email"]',
         site:'input[name="url"]',
         avatar:'#comment-form-avatar',
@@ -50,7 +50,7 @@ var comments=(function($,emojione){
                     $("#comment-success").html('评论成功');                  //插入新评论
                     $(form.self).before('<div class="media my-2">\
                     <img class="avatar d-flex mt-1 mr-2" width="60px" src="'+ $(form.avatar).attr('src') +'">\
-                    <div class="media-body">'+emojione.unicodeToImage($(form.nikename).val()||$(form.nikename2).text())+'\
+                    <div class="media-body">'+emojione.unicodeToImage($(form.nickname).val()||$(form.nickname2).text())+'\
                     <span class="small text-secondary float-right">刚刚</span>\
                     <div class="my-3">'+emojione.unicodeToImage($(form.content).val())+'</div></div></div>').prev().hide().fadeIn();
                 }else{
@@ -68,7 +68,7 @@ var comments=(function($,emojione){
     function lazyLoadBrow() {
         if($(comment.list).length && $(document).scrollTop() + $(window).height() > $(comment.list).offset().top){
             $(window).off('scroll', lazyLoadBrow);
-            $('.comment-text,.comment-nikename,#comment-form-nikename').each(function(){      //渲染评论表情
+            $('.comment-text,.comment-nickname,#comment-form-nickname').each(function(){      //渲染评论表情
                 $(this).html(emojione.unicodeToImage($(this).html()));
             });
         }

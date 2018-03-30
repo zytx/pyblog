@@ -1,12 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser,BaseUserManager,PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.core.mail import send_mail
 
-# Create your models here.
 
 class UserManager(BaseUserManager):
 
-    def create_user(self, email, nikename ,password=None):
+    def create_user(self, email, nickname, password=None):
         """
         新建用户
         """
@@ -15,21 +14,21 @@ class UserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
-            nikename=nikename
+            nickname=nickname
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, nikename,password):
+    def create_superuser(self, email, nickname, password):
         """
         新建超级用户
         """
         user = self.create_user(
             email,
             password=password,
-            nikename=nikename
+            nickname=nickname
         )
         user.is_superuser = True
         user.is_staff = True
@@ -37,24 +36,24 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser,PermissionsMixin):
-    '''
+class User(AbstractBaseUser, PermissionsMixin):
+    """
     用户模型
     Email为用户名
-    '''
-    email = models.EmailField('邮箱',max_length=50,unique=True)
-    nikename = models.CharField('昵称',max_length=30)
-    url = models.URLField('网站',null=True, blank=True)
-    level = models.PositiveIntegerField('等级',default=0)
-    reg_date = models.DateTimeField('注册日期',auto_now=True)
+    """
+    email = models.EmailField('邮箱', max_length=50, unique=True)
+    nickname = models.CharField('昵称', max_length=30)
+    url = models.URLField('网站', null=True, blank=True)
+    level = models.PositiveIntegerField('等级', default=0)
+    reg_date = models.DateTimeField('注册日期', auto_now=True)
 
-    is_active = models.BooleanField('可用状态',default=True)
-    is_staff = models.BooleanField('职员状态',default=False,help_text=('指明该用户能否登录后台管理'))
+    is_active = models.BooleanField('可用状态', default=True)
+    is_staff = models.BooleanField('职员状态', default=False, help_text='指明该用户能否登录后台管理')
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['nikename']
+    REQUIRED_FIELDS = ['nickname']
 
     class Meta:
         verbose_name = '用户'
@@ -62,11 +61,11 @@ class User(AbstractBaseUser,PermissionsMixin):
 
     def get_full_name(self):
         # The user is identified by their email address
-        return self.nikename
+        return self.nickname
 
     def get_short_name(self):
         # The user is identified by their email address
-        return self.nikename
+        return self.nickname
 
     def __str__(self):
         return self.email

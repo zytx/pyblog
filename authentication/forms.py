@@ -4,16 +4,17 @@ from .models import User
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
+
 class UserCreationForm(forms.ModelForm):
-    password1 = forms.CharField(label='密码', widget=forms.PasswordInput,validators=[validate_password])
+    password1 = forms.CharField(label='密码', widget=forms.PasswordInput, validators=[validate_password])
     password2 = forms.CharField(label='密码确认', widget=forms.PasswordInput)
 
     class Meta:
         model = User
-        fields = ('email','nikename','url')
+        fields = ('email', "nickname", 'url')
         labels = {
-            'email' : '邮箱',
-            'url' : '网站(可选)'
+            'email': '邮箱',
+            'url': '网站(可选)'
         }
 
     def clean_password2(self):
@@ -34,7 +35,7 @@ class UserCreationForm(forms.ModelForm):
 
 
 class UserChangeForm(forms.ModelForm):
-    password = ReadOnlyPasswordHashField(label='密码',help_text='<a href="../password/">修改密码</a>')
+    password = ReadOnlyPasswordHashField(label='密码', help_text='<a href="../password/">修改密码</a>')
 
     class Meta:
         model = User
@@ -48,5 +49,5 @@ class UserChangeForm(forms.ModelForm):
 
 
 class UserLoginForm(forms.Form):
-    email = forms.EmailField(label='邮箱',max_length=50)
-    password = forms.CharField(label='密码',widget=forms.PasswordInput,validators=[validate_password])
+    email = forms.EmailField(label='邮箱', max_length=50)
+    password = forms.CharField(label='密码', widget=forms.PasswordInput, validators=[validate_password])

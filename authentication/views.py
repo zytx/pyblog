@@ -1,17 +1,17 @@
-from django.views.generic.base import View,RedirectView
+from django.views.generic.base import View, RedirectView
 from django.http import JsonResponse
-from django.contrib.auth import authenticate,logout,login
-from .forms import UserCreationForm,UserLoginForm
+from django.contrib.auth import authenticate, logout, login
+from .forms import UserCreationForm, UserLoginForm
 
-# Create your views here.
 
 class Register(View):
 
-    def post(self, request, *args, **kwargs):
+    @staticmethod
+    def post(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             result = {
-                'status':1
+                'status': 1
             }
             newUser = form.save()
             login(request, newUser)
@@ -25,10 +25,11 @@ class Register(View):
 
 class Login(View):
 
-    def post(self, request, *args, **kwargs):
+    @staticmethod
+    def post(request):
         form = UserLoginForm(request.POST)
         result = {
-                'status': 0,
+            'status': 0,
         }
         if form.is_valid():
             user = authenticate(email=form.cleaned_data['email'], password=form.cleaned_data['password'])
@@ -50,6 +51,6 @@ class Login(View):
 class Logout(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
-        self.url = self.request.META.get('HTTP_REFERER','/')
+        self.url = self.request.META.get('HTTP_REFERER', '/')
         logout(self.request)
         return super(Logout, self).get_redirect_url(*args, **kwargs)

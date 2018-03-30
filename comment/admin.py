@@ -1,14 +1,11 @@
 from django.contrib import admin
 from .models import Comment
 
-# Register your models here.
-
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-
-    list_display = ('username','content','article','date','status')
-    search_fields = ('user__nikename','user__email','nikename','email','content')
+    list_display = ('username', 'content', 'article', 'date', 'status')
+    search_fields = ('user__nickname', 'user__email', 'nickname', 'email', 'content')
 
     class Media:
         css = {
@@ -23,9 +20,11 @@ class CommentAdmin(admin.ModelAdmin):
         )
 
     def username(self, obj):
-        return obj.nikename if obj.nikename else obj.user.nikename
+        return obj.nickname if obj.nickname else obj.user.nickname
+
     username.short_description = '作者'
 
     def status(self, obj):
-        return '-' if obj.nikename else '注册'
+        return '-' if obj.nickname else '注册'
+
     status.short_description = '用户状态'
