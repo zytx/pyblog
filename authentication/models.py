@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group as GroupModel
 from django.core.mail import send_mail
 
 
@@ -75,3 +75,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         Sends an email to this User.
         """
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+
+class Group(GroupModel):
+    class Meta:
+        proxy = True
+        verbose_name = '组'
+        verbose_name_plural = '组'

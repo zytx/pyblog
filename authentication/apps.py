@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class AuthenticationConfig(AppConfig):
     name = 'authentication'
-    verbose_name = '认证'
+    verbose_name = '认证与授权'

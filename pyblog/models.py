@@ -1,8 +1,7 @@
 from django.db import models
 from django.conf import settings
-
-
-# Create your models here.
+from comment.models import Comment as CommentModel
+from editormd.models import Image as ImageModel
 
 
 class Tag(models.Model):
@@ -12,8 +11,8 @@ class Tag(models.Model):
     desc = models.CharField('描述', blank=True, null=True, max_length=500)
 
     class Meta:
-        verbose_name = '标签'
-        verbose_name_plural = '标签'
+        verbose_name = '   标签'
+        verbose_name_plural = '   标签'
 
     def __str__(self):
         return self.title
@@ -26,8 +25,8 @@ class Category(models.Model):
     desc = models.CharField('描述', blank=True, null=True, max_length=500)
 
     class Meta:
-        verbose_name = '分类'
-        verbose_name_plural = '分类'
+        verbose_name = '    分类'
+        verbose_name_plural = '    分类'
 
     def __str__(self):
         return self.title
@@ -54,8 +53,24 @@ class Article(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='作者')
 
     class Meta:
-        verbose_name = '文章'
-        verbose_name_plural = '文章'
+        verbose_name = '     文章'
+        verbose_name_plural = '     文章'
 
     def __str__(self):
         return self.title
+
+
+class Comment(CommentModel):
+
+    class Meta:
+        proxy = True
+        verbose_name = '评论'
+        verbose_name_plural = '评论'
+
+
+class Image(ImageModel):
+
+    class Meta:
+        proxy = True
+        verbose_name = '  图片'
+        verbose_name_plural = '  图片'

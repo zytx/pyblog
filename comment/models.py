@@ -1,6 +1,5 @@
 from django.db import models
 from django.conf import settings
-from pyblog.models import Article
 from django.core.mail import EmailMultiAlternatives
 from django.template import loader
 from collections import OrderedDict
@@ -20,7 +19,7 @@ class Comment(models.Model):
 
     allow_email = models.BooleanField('有回复时通过邮件通知', default=True)
     is_pub = models.BooleanField('发布', default=True)
-    article = models.ForeignKey(Article, verbose_name='文章')
+    article = models.ForeignKey('pyblog.Article', verbose_name='文章')
     content = models.TextField('评论')
     date = models.DateTimeField('创建日期', auto_now_add=True)
 

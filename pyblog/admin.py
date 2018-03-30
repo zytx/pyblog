@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from editormd.models import Image
+from editormd.admin import ImageAdmin
+from comment.admin import CommentAdmin
 from .forms import ArticleAdminForm
-from .models import Tag, Category, Article
+from .models import Tag, Category, Article, Comment, Image
 
 admin.site.site_header = "Administration"
 admin.site.site_title = "Mr.Z's Blog"
@@ -58,3 +59,7 @@ class ArticleAdmin(admin.ModelAdmin):
         return mark_safe('昵称: %s<br/>邮箱: %s' % (obj.author.nickname, obj.author.email))
 
     author_info.short_description = '作者'
+
+
+admin.site.register(Comment, CommentAdmin)
+admin.site.register(Image, ImageAdmin)

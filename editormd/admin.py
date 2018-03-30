@@ -1,5 +1,4 @@
 from django.contrib import admin
-from editormd.models import Image
 
 
 class ImageAdmin(admin.ModelAdmin):
@@ -16,6 +15,3 @@ class ImageAdmin(admin.ModelAdmin):
 
     preview.allow_tags = preview_full.allow_tags = True
     preview.short_description = preview_full.short_description = "预览"
-
-
-admin.site.register(Image, ImageAdmin)

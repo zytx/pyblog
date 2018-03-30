@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from pyblog.models import Article
 from django.db.models.signals import pre_save, post_delete
 from django.dispatch.dispatcher import receiver
 import time
@@ -14,7 +13,7 @@ def img_path(instance, filename):
 
 class Image(models.Model):
     img = models.ImageField(verbose_name='图片', upload_to=img_path)
-    rel = models.ForeignKey(Article, verbose_name='文章', blank=True, null=True)
+    rel = models.ForeignKey('pyblog.Article', verbose_name='文章', blank=True, null=True)
 
     class Meta:
         verbose_name = '图片'
