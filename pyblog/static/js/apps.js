@@ -48,7 +48,7 @@ var siteAJAX=(function($) {
         return $(data).not("title").not("#data-outline");
     };
     var ajaxReg = function (){
-        $("body").on('click',selector,function(e){
+        $("body").off('click',selector).on('click',selector,function(e){
             e.preventDefault();
             if($(this)[0].host != window.location.host){     //非本站链接跳转
                 window.open($(this)[0].href);
@@ -72,7 +72,6 @@ var siteAJAX=(function($) {
             });
         });
         ajaxRegCallback();
-        setCookie(1);
     };
     var outline = function () {
         /**
@@ -142,6 +141,7 @@ var siteAJAX=(function($) {
     }
     $("#ajax-checkbox").on('change',function(){
         if(this.checked) {
+            setCookie(1);
             ajaxReg();
         }else{              //关闭AJAX
             $("body").off('click',selector);

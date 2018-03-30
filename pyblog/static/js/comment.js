@@ -66,7 +66,7 @@ var comments=(function($,emojione){
         });
     }
     function lazyLoadBrow() {
-        if($(document).scrollTop()+$(window).height()>$(comment.list).offset().top){
+        if($(comment.list).length && $(document).scrollTop() + $(window).height() > $(comment.list).offset().top){
             $(window).off('scroll', lazyLoadBrow);
             $('.comment-text,.comment-nikename,#comment-form-nikename').each(function(){      //渲染评论表情
                 $(this).html(emojione.unicodeToImage($(this).html()));
@@ -74,7 +74,7 @@ var comments=(function($,emojione){
         }
     }
     function lazyLoadEmojiTextArea() {
-        if($(document).scrollTop()+$(window).height()>$(form.self).offset().top){
+        if($(form.self).length && $(document).scrollTop() + $(window).height() > $(form.self).offset().top){
             $(window).off('scroll', lazyLoadEmojiTextArea);
             var t=function() {
                 $("#comment-form textarea").emojioneArea({          //渲染评论文本框
