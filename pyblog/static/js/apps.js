@@ -48,7 +48,7 @@ var siteAJAX=(function($,comments) {
     var ajaxReg = function (){
         $("body").on('click',selector,function(e){
             e.preventDefault();
-            if($(this)[0].host != document.domain){     //非本站链接跳转
+            if($(this)[0].host != window.location.host){     //非本站链接跳转
                 window.open($(this)[0].href);
                 return;
             }

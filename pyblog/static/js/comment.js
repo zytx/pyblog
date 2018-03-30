@@ -79,22 +79,17 @@ var comments=(function($,emojione){
     function textArea() {
         var t=function() {
             $("#comment-form textarea").emojioneArea({          //渲染评论文本框
-              template        : "<filters/><tabs/><editor/>",
-              tonesStyle      : "radio",
-              imageType       : "svg",
-              autocomplete    : false,    //关闭自动补全
-              useInternalCDN  : false,      //关闭cloudflare CDN
-              buttonTitle     : '表情[Tab]'
+                template        : "<filters/><tabs/><editor/>",
+                tonesStyle      : "radio",
+                imageType       : "svg",
+                autocomplete    : false,    //关闭自动补全
+                useInternalCDN  : false,      //关闭cloudflare CDN
+                buttonTitle     : '表情[Tab]'
             });
         }
         if(typeof $().emojioneArea !== 'undefined' && $.isFunction($().emojioneArea)){
             t();
         }else{
-            $("<link>").attr({
-                rel: "stylesheet",
-                type: "text/css",
-                href: "//cdn.bootcss.com/emojionearea/3.1.8/emojionearea.min.css"
-            }).appendTo("head");
             $.getScript('//cdn.bootcss.com/emojionearea/3.1.8/emojionearea.min.js',function() {
                 t();
             })
