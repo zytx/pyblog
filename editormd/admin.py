@@ -7,7 +7,6 @@ class ImageAdmin(admin.ModelAdmin):
     search_fields = ('img',)
 
     def preview(self, obj):
-        print(obj.img.size)
         return '<img src="%s/h150" />' % obj.img.url
 
     def preview_full(self, obj):
