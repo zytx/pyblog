@@ -39,7 +39,7 @@ var comments=(function($,emojione){
     });
 
     function regAJAX() {
-        content.on('submit',form.self,function(e){
+        content.off('submit',form.self).on('submit',form.self,function(e){
             e.preventDefault();
             $(form.submit).attr("disabled",true);
             var data = $(this).serialize()+'&to='+$(form.to).val();
