@@ -37,7 +37,7 @@
     <div class="media mb-2">
         <img id="comment-form-avatar" class="mr-2" src="{{user.email|avatar}}"/>
         <div class="media-body">
-            <div class="mb-2">Hi，<span class="comment-nickname">{{user.get_full_name}}</span> <div class="float-right"><a href="{% url 'logout' %}" rel="nofollow">注销</a></div></div>
+            <div class="mb-2">Hi，<a class="comment-nickname" href="{{user.url}}" rel="external nofollow" target="_blank">{{user.get_full_name}}</a> <div class="float-right"><a href="{% url 'logout' %}" rel="nofollow">注销</a></div></div>
             <div>欢迎回来</div>
         </div>
     </div>

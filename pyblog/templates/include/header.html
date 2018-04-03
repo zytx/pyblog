@@ -10,7 +10,7 @@
         </div>
         <div class="col-auto d-none d-md-block pt-1">
             {% if user.is_authenticated %}
-            Hi，<span class="nickname">{{user.get_full_name}}</span> | <a class="text-white" href="{% url 'logout' %}" rel="nofollow">注销</a>
+            Hi，<span class="nikename">{{user.get_full_name}}</span> | <a class="text-white" href="{% url 'logout' %}" rel="nofollow">注销</a>
             {% else %}
                 <a class="text-white" data-toggle="modal" data-target="#login-modal" href="#">登录</a> |
                 <a class="text-white" data-toggle="modal" data-target="#register-modal" href="#">注册</a>
@@ -29,10 +29,12 @@
                 <a class="nav-item nav-link p-3" href="{% url 'index' %}">首页</a>
                 <a class="nav-item nav-link p-3" href="{% url 'archive' %}">归档</a>
             </div>
-            <div class="custom-control custom-checkbox">
-                <input id="ajax-checkbox" type="checkbox" class="custom-control-input"{% if request.COOKIES.AJAX != '0' %} checked{% endif %}>
-                <label class="custom-control-label text-white mr-3" for="ajax-checkbox">AJAX</label>
-            </div>
+            <span class="navbar-text pl-3">
+                <div class="custom-control custom-checkbox">
+                    <input id="ajax-checkbox" type="checkbox" class="custom-control-input"{% if request.COOKIES.AJAX != '0' %} checked{% endif %}>
+                    <label class="custom-control-label text-white mr-3" for="ajax-checkbox">AJAX</label>
+                </div>
+            </span>
         </div>
     </nav>
 

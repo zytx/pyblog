@@ -15,6 +15,9 @@ var comments=(function($,emojione){
         list:'#comment-list',
         reply:'.comment-reply'
     };
+    var user_url = function () {
+        $(form.site).val() || $(form.nickname2).attr('href');
+    }();
     initLazyLoad();
     lazyLoadBrow();
     lazyLoadEmojiTextArea();
@@ -50,7 +53,7 @@ var comments=(function($,emojione){
                     $("#comment-success").html('评论成功');                  //插入新评论
                     $(form.self).before('<div class="media my-2">\
                     <img class="avatar d-flex mt-1 mr-2" width="60px" src="'+ $(form.avatar).attr('src') +'">\
-                    <div class="media-body">'+emojione.unicodeToImage($(form.nickname).val()||$(form.nickname2).text())+'\
+                    <div class="media-body"><a href="'+user_url+'">'+emojione.unicodeToImage($(form.nickname).val()||$(form.nickname2).text())+'</a>\
                     <span class="small text-secondary float-right">刚刚</span>\
                     <div class="my-3">'+emojione.unicodeToImage($(form.content).val())+'</div></div></div>').prev().hide().fadeIn();
                 }else{
