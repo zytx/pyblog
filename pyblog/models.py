@@ -1,76 +1,47 @@
 from django.db import models
-from django.conf import settings
-from comment.models import Comment as CommentModel
-from editormd.models import Image as ImageModel
+from django.utils import timezone
+import uuid
+from .templatetags.pyblog import markdown_to_html
 
 
 class Tag(models.Model):
-    title = models.CharField('标签', max_length=100, unique=True)
-    slug = models.SlugField('别名(URL)', max_length=100, unique=True)
-    keywords = models.CharField('关键字', blank=True, null=True, max_length=200, help_text='用于Keywords标签，逗号隔开')
-    desc = models.CharField('描述', blank=True, null=True, max_length=500)
-
-    class Meta:
-        verbose_name = '   标签'
-        verbose_name_plural = '   标签'
-
-    def __str__(self):
-        return self.title
-
-
-class Category(models.Model):
-    title = models.CharField('分类', max_length=100, unique=True)
-    slug = models.SlugField('别名(URL)', max_length=100, unique=True)
-    keywords = models.CharField('关键字（自动追加Tag）', blank=True, null=True, max_length=200, help_text='用于Keywords标签，逗号隔开')
-    desc = models.CharField('描述', blank=True, null=True, max_length=500)
-
-    class Meta:
-        verbose_name = '    分类'
-        verbose_name_plural = '    分类'
-
-    def __str__(self):
-        return self.title
-
-
-class Article(models.Model):
-    is_pub = models.BooleanField('发布', default=True)
+    uid = models.UUIDField('UID', default=uuid.uuid4)
     title = models.CharField('标题', max_length=100, unique=True)
-    slug = models.SlugField('别名(URL)', max_length=100, unique=True)
-    content = models.TextField('正文')
-    # content_html = models.TextField('HTML正文(由content生成，不要修改)')   #空间换时间。。
-    keywords = models.CharField('关键字', blank=True, null=True, max_length=200,
-                                help_text='用于Keywords标签，自动追加该文章Tag，逗号隔开')
-    desc = models.CharField('摘要', blank=True, null=True, max_length=500)
-    TYPE_CHOICES = (
-        (0, '文章'),
-        (1, '页面'),
-    )
-    type = models.PositiveSmallIntegerField('文章类型', choices=TYPE_CHOICES, default=0)
-    category = models.ForeignKey(Category, verbose_name='分类')
-    tags = models.ManyToManyField(Tag, verbose_name='标签')
-    pub_date = models.DateTimeField('创建日期', auto_now_add=True)
-    mod_date = models.DateTimeField('修改日期', auto_now=True)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='作者')
+    # slug = models.SlugField('别名(URL)', max_length=100, unique=True)
 
     class Meta:
-        verbose_name = '     文章'
-        verbose_name_plural = '     文章'
+        verbose_name = '标签'
+        verbose_name_plural = verbose_name
 
     def __str__(self):
         return self.title
 
 
-class Comment(CommentModel):
+class Post(models.Model):
+    TYPE_Post = 0
+    TYPE_PAGE = 1
+    TYPE_CHOICES = (
+        (TYPE_Post, '文章'),
+        (TYPE_PAGE, '页面'),
+    )
+    uid = models.UUIDField('UID', default=uuid.uuid4)
+    is_published = models.BooleanField('已发布', default=True)
+    title = models.CharField('标题', max_length=100)
+    slug = models.SlugField('别名(URL)', max_length=100, unique=True)
+    content = models.TextField('正文 Markdown')
+    content_html = models.TextField('正文 HTML', editable=False)
+    type = models.PositiveSmallIntegerField('文章类型', choices=TYPE_CHOICES, default=TYPE_Post)
+    tags = models.ManyToManyField(Tag, verbose_name='标签')
+    created_time = models.DateTimeField('创建日期', default=timezone.now)
+    updated_time = models.DateTimeField('修改日期', default=timezone.now)
 
     class Meta:
-        proxy = True
-        verbose_name = '评论'
-        verbose_name_plural = '评论'
+        verbose_name = '文章'
+        verbose_name_plural = verbose_name
 
+    def __str__(self):
+        return self.title
 
-class Image(ImageModel):
-
-    class Meta:
-        proxy = True
-        verbose_name = '  图片'
-        verbose_name_plural = '  图片'
+    def save(self, *args, **kwargs):
+        self.content_html = markdown_to_html(self.content)
+        super(Post, self).save(*args, **kwargs)

@@ -3,22 +3,15 @@
 <ul class="list-unstyled text-muted mb-3">
 {% hotArticle as hotArticle %}
   {% for item in hotArticle %}
-      <li class="text-truncate"><a href="{% url 'article' item.slug %}" title="{{item.title}}">{{item.title}}</a> ({{item.comment__count}})</li>
+      <li class="text-truncate"><a href="{% url 'post' item.slug %}" title="{{item.title}}">{{item.title}}</a></li>
   {% endfor %}
-</ul>
-<h4 class="pb-2">文章分类</h4>
-<ul class="list-unstyled mb-3">
-{% categorys as categorys %}
-{% for category in categorys %}
-<li><a href="{% url 'category' category.slug %}" title="{{category.title}}">{{category.title}}</a></li>
-{% endfor %}
 </ul>
 
 <h4 class="pb-2">标签</h4>
 <div class="tags">
 {% tags as tags %}
   {% for tag in tags %}
-  <a class="tag-list" href="{% url 'tag' tag.slug %}" title="{{tag.title}}">{{tag.title}}</a>
+  <a class="tag-list" href="{% url 'tag' tag.title %}" title="{{tag.title}}">{{tag.title}}</a>
   {% endfor %}
 </div>
 

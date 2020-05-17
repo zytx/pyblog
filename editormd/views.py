@@ -1,7 +1,7 @@
 from django.http import JsonResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 from editormd.models import Image
-from pyblog.models import Article
+from pyblog.models import Post
 
 
 @csrf_exempt
@@ -11,7 +11,7 @@ def upload(request):
         json = {'success': 0, }
         if photo:
             try:
-                img = Image(img=photo, rel=Article.objects.get(id=(request.META.get('HTTP_REFERER').split('/')[-3])))
+                img = Image(img=photo, rel=Post.objects.get(id=(request.META.get('HTTP_REFERER').split('/')[-3])))
             except IndexError:
                 return HttpResponseBadRequest()
             img.save()

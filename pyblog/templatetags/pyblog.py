@@ -1,21 +1,22 @@
+import re
+
+import mistune
 from django import template
 from django.conf import settings
 from django.utils.html import mark_safe
-import mistune
-import re
-from pyblog.models import Article, Category, Tag
-from django.db.models import Count
+
+from pyblog import models
 
 register = template.Library()
 
-outline = []
+outline_list = []
 
 
 class Renderer(mistune.Renderer):
 
     def __init__(self):
-        global outline
-        outline = []
+        global outline_list
+        outline_list = []
         self.h_pattern = re.compile(r'<([\w]+) [^>]+.*\1>')
         super(__class__, self).__init__()
 
@@ -34,17 +35,17 @@ class Renderer(mistune.Renderer):
         """
         if level == 2:
             clean_text = self.h_pattern.sub('', text)
-            outline.append([clean_text, ])
+            outline_list.append([clean_text, ])
             return '<h%d id="h-%d" class="h%d">%d. %s</h%d>\n' % (
-                level, len(outline), level + 3, len(outline), text, level)
+                level, len(outline_list), level + 3, len(outline_list), text, level)
         elif level == 3:
             clean_text = self.h_pattern.sub('', text)
-            if len(outline[-1]) >= 2:
-                outline[-1][-1].append(clean_text)
+            if len(outline_list[-1]) >= 2:
+                outline_list[-1][-1].append(clean_text)
             else:
-                outline[-1].append([clean_text, ])
+                outline_list[-1].append([clean_text, ])
             return '<h%d id="h-%d-%d" class="h%d">%d.%d. %s</h%d>\n' % (
-                level, len(outline), len(outline[-1][-1]), level + 3, len(outline), len(outline[-1][-1]), text, level)
+                level, len(outline_list), len(outline_list[-1][-1]), level + 3, len(outline_list), len(outline_list[-1][-1]), text, level)
         else:
             return '<h%d class="h%d">%s</h%d>\n' % (level, level + 3, text, level)
 
@@ -93,11 +94,7 @@ class Renderer(mistune.Renderer):
                    '<tbody>\n%s</tbody>\n</table>\n'
                ) % (header, body)
 
-
-@register.filter()
-def markdown(text):
-    md = mistune.Markdown(escape=False, renderer=Renderer(), hard_wrap=True)  # hard_wrap:回车换行
-    return md(text)
+markdown_to_html = mistune.Markdown(escape=False, renderer=Renderer(), hard_wrap=True)  # hard_wrap:回车换行
 
 
 @register.filter()
@@ -107,28 +104,20 @@ def denewline(text):
 
 @register.simple_tag
 def hotArticle():
-    return Article.objects.filter(is_pub=True).annotate(Count('comment')).order_by('-comment__count',
-                                                                                   '-pub_date').values('title', 'slug',
-                                                                                                       'comment__count'
-                                                                                                       )[:8]
-
-
-@register.simple_tag
-def categorys():
-    return Category.objects.values('title', 'slug')
+    return models.Post.objects.filter(is_published=True)[:8]
 
 
 @register.simple_tag
 def tags():
-    return Tag.objects.values('title', 'slug')
+    return models.Tag.objects.values('title')
 
 
 @register.simple_tag
 def outline():
-    if len(outline) == 0:
+    if len(outline_list) == 0:
         return ''
     result = '<h4 class="pb-2">目录</h4><ul class="nav nav-pills flex-column text-truncate">'
-    for index_h2, item in enumerate(outline, 1):
+    for index_h2, item in enumerate(outline_list, 1):
         result += '<li><a class="nav-link" title="%s" href="#h-%d">%d. %s</a>' % (item[0], index_h2, index_h2, item[0])
         if len(item) >= 2:
             result += '<ul class="nav nav-pills flex-column ml-3 d-none">'

@@ -10,7 +10,7 @@
         </div>
         <div class="col-auto d-none d-md-block pt-1">
             {% if user.is_authenticated %}
-            Hi，<span class="nikename">{{user.get_full_name}}</span> | <a class="text-white" href="{% url 'logout' %}" rel="nofollow">注销</a>
+            Hi，<span class="nikename">{{user.get_full_name}}</span> | <a class="text-white" href="{% url 'admin:logout' %}" rel="nofollow">注销</a>
             {% else %}
                 <a class="text-white" data-toggle="modal" data-target="#login-modal" href="#">登录</a> |
                 <a class="text-white" data-toggle="modal" data-target="#register-modal" href="#">注册</a>

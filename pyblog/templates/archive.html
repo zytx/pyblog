@@ -10,7 +10,7 @@
 {% load i18n %}
 
 <h1 class="h2 mt-2 text-center">文章归档</h1>
-{% regroup latest by pub_date.year as dates_by_year %}
+{% regroup latest by created_time.year as dates_by_year %}
 
 {% for year in dates_by_year %}
 <div>
@@ -20,7 +20,7 @@
     </a>
   </h2>
 </div>
-{% regroup year.list by pub_date.month as dates_by_month %}
+{% regroup year.list by created_time.month as dates_by_month %}
 <div id="id{{ year.grouper }}" class="collapse card-block {% if forloop.first %}show{% endif %}" role="tabpanel">
     {% for day in dates_by_month %}
         <ul>
@@ -29,7 +29,7 @@
                 <ul>
                     {% for item in day.list %}
                         <li>
-                            <h3 class="h6">{{item.pub_date|date:"d日"}} <a href="{% url 'article' item.slug %}">{{ item.title }}</a></h3>
+                            <h3 class="h6">{{item.created_time|date:"d日"}} <a href="{% url 'post' item.slug %}">{{ item.title }}</a></h3>
                         </li>
                     {% endfor %}
                 </ul>
