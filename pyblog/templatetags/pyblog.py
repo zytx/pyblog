@@ -109,7 +109,7 @@ def hotArticle():
 
 @register.simple_tag
 def tags():
-    return models.Tag.objects.values('title')
+    return models.Tag.objects.filter(post__isnull=False).distinct().values('title')
 
 
 @register.simple_tag

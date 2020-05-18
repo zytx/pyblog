@@ -1,13 +1,14 @@
+import uuid
+
 from django.db import models
 from django.utils import timezone
-import uuid
+
 from .templatetags.pyblog import markdown_to_html
 
 
 class Tag(models.Model):
     uid = models.UUIDField('UID', default=uuid.uuid4)
     title = models.CharField('标题', max_length=100, unique=True)
-    # slug = models.SlugField('别名(URL)', max_length=100, unique=True)
 
     class Meta:
         verbose_name = '标签'
@@ -15,6 +16,11 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.title
+
+    def post_count(self):
+        return self.post_set.count()
+
+    post_count.short_description = '文章数'
 
 
 class Post(models.Model):
@@ -41,6 +47,11 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def tags_str(self, split=','):
+        return split.join(self.tags.values_list('title', flat=True))
+
+    tags_str.short_description = '标签'
 
     def save(self, *args, **kwargs):
         self.content_html = markdown_to_html(self.content)
