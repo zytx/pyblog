@@ -1,9 +1,11 @@
 button, input, optgroup, select, textarea, body {
     Font-family: "Helvetica Neue", "Hiragino Sans GB", "Microsoft Yahei", Arial, sans-serif;
 }
+
 body {
     background-color: #DDD;
 }
+
 a {
     color: #17a2b8;
     transition: all 0.2s;
@@ -11,38 +13,62 @@ a {
     -moz-transition: all 0.2s;
     -o-transition: all 0.2s;
 }
-a:focus,a:hover {
+
+a:focus, a:hover {
     text-decoration: none;
     color: #dc3545;
 }
+
+/* large devices */
+@media (min-width: 1500px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1500px;
+    }
+}
+
+/* extra large devices */
+@media screen and (min-width: 1800px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1700px;
+    }
+}
+
 #wrapper {
     background-color: #F9F9F9;
     box-shadow: 0 0 4px #777777;
-    overflow:hidden;
+    overflow: hidden;
 }
+
 #header {
     border-bottom: #17a2b8 .3em solid;
 }
+
 #header-navbar .navbar-brand {
     padding: .6em;
 }
+
 #header-navbar .navbar-nav .nav-link {
     color: #fff;
 }
-#header-navbar .navbar-nav .active>.nav-link, #header-navbar .navbar-nav .nav-link.active, #header-navbar .navbar-nav .nav-link.open, #header-navbar .navbar-nav .open>.nav-link {
+
+#header-navbar .navbar-nav .active > .nav-link, #header-navbar .navbar-nav .nav-link.active, #header-navbar .navbar-nav .nav-link.open, #header-navbar .navbar-nav .open > .nav-link {
     background-color: #17a2b8;
 }
+
 #header-navbar .navbar-nav .nav-link:hover {
     background-color: #17a2b8;
 }
+
 #header-navbar .custom-control-label {
     cursor: pointer;
 }
+
 #header-navbar .custom-control-label::before {
     background-color: transparent;
     border: 1px #fff solid;
     cursor: pointer;
 }
+
 #header-navbar .header-progress-bar {
     float: left;
     position: absolute;
@@ -50,12 +76,14 @@ a:focus,a:hover {
     height: 100%;
     opacity: .2;
 }
+
 /**
 *  Content
 */
-.article-list-item h2 a:hover{
+.article-list-item h2 a:hover {
     margin-left: .1em;
 }
+
 .mask {
     background: #F9F9F9;
     opacity: .5;
@@ -66,10 +94,12 @@ a:focus,a:hover {
     top: 0;
     left: 0;
 }
-.article-text h2,.article-text h3 {
+
+.article-text h2, .article-text h3 {
     border-bottom: #D6D6D6 1px solid;
     background: #F3F3F3;
 }
+
 .article-text h2 {
     border-left: #17A2B8 .4rem solid;
     padding: .5rem 0 .5rem 1rem;
@@ -78,68 +108,116 @@ a:focus,a:hover {
     left: -1.5rem;
     width: 103%;
 }
+
 .article-text h3 {
     border-left: #17A2B8 .2rem solid;
     padding: .4rem 0 .4rem .7rem;
     margin: 1rem 0 .8rem 0;
 }
+
 .article-text img {
     max-width: 100%;
 }
+
 /**
  * 评论
  */
 #comment-list .comment-reply {
-    cursor:pointer;
+    cursor: pointer;
     color: #17a2b8;
 }
+
 #comment-list .comment-reply:hover {
     color: #dc3545;
 }
-.emojione{
-    font-size:inherit;
-    height:2ex;
-    width:2.1ex;
-    min-height:20px;
-    min-width:20px;
-    display:inline-block;
-    margin:-.2ex .15em .2ex;
+
+.emojione {
+    font-size: inherit;
+    height: 2ex;
+    width: 2.1ex;
+    min-height: 20px;
+    min-width: 20px;
+    display: inline-block;
+    margin: -.2ex .15em .2ex;
 }
-img.emojione{
-    width:auto
+
+img.emojione {
+    width: auto
 }
+
 .emojionearea, .emojionearea.form-control {
     font-size: 1rem;
 }
+
 .emojionearea .emojionearea-editor:empty:before {
     color: #888;
 }
+
 /**
 *  Sidebar
 */
- 
+
 #sidebar {
     border-left: #D6D6D6 1px solid;
 }
-#sidebar h4{
+
+#sidebar h4 {
     font-size: 1.1rem;
     border-bottom: #D6D6D6 1px solid;
 }
+
 .tag-list {
     background-color: #ddd;
     margin: 2px 4px 2px 0;
-    padding: 0 4px;
+    padding: 0 20px;
     color: #929292;
     display: inline-block;
-    font-size: .9rem;
+    font-size: .8rem;
+    text-decoration: none;
+    position: relative;
+    border-radius: 3px 0 0 3px;
+    height: 26px;
+    line-height: 26px;
 }
+
+.tag-list::before {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: inset 0 1px rgba(0, 0, 0, 0.25);
+    content: '';
+    width: 6px;
+    height: 6px;
+    left: 7px;
+    position: absolute;
+    top: 10px;
+}
+
+.tag-list::after {
+    background: #f9f9f9;
+    border-bottom: 13px solid transparent;
+    border-left: 10px solid #ddd;
+    border-top: 13px solid transparent;
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: all 0.2s;
+    -webkit-transition: all 0.2s
+}
+
 .tag-list:hover, .tag-list:focus {
     background-color: #17a2b8;
     color: #fff;
 }
+
+.tag-list:hover::after {
+    border-left-color: #17a2b8;
+}
+
 #outline {
     font-size: .9rem;
 }
+
 #outline .nav-pills .nav-link {
     border-radius: 0;
     padding: .2rem .5rem;
@@ -147,10 +225,12 @@ img.emojione{
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-#outline .nav-pills .nav-link.active, #outline .nav-pills .nav-link:hover{
+
+#outline .nav-pills .nav-link.active, #outline .nav-pills .nav-link:hover {
     color: #fff;
     background-color: #17a2b8;
 }
+
 #outline > ul.nav > li > ul {
     border-left: 1px #17A2B8 solid;
 }
@@ -163,33 +243,131 @@ img.emojione{
 *    代码高亮
 **/
 /* desert scheme ported from vim to google prettify */
-pre.prettyprint { padding: 10px 0;display: block;background-color: #444;color:#fff; }
-pre .nocode { background-color: none; color: #000 }
-pre .str { color: #ffa0a0 } /* string  - pink */
-pre .kwd { color: #f0e68c; font-weight: bold }
-pre .com { color: #87ceeb } /* comment - skyblue */
-pre .typ { color: #98fb98 } /* type    - lightgreen */
-pre .lit { color: #cd5c5c } /* literal - darkred */
-pre .pun { color: #fff }    /* punctuation */
-pre .pln { color: #fff }    /* plaintext */
-pre .tag { color: #f0e68c; font-weight: bold } /* html/xml tag    - lightyellow */
-pre .atn { color: #bdb76b; font-weight: bold } /* attribute name  - khaki */
-pre .atv { color: #ffa0a0 } /* attribute value - pink */
-pre .dec { color: #98fb98 } /* decimal         - lightgreen */
+pre.prettyprint {
+    padding: 10px 0;
+    display: block;
+    background-color: #444;
+    color: #fff;
+}
+
+pre .nocode {
+    background-color: none;
+    color: #000
+}
+
+pre .str {
+    color: #ffa0a0
+}
+
+/* string  - pink */
+pre .kwd {
+    color: #f0e68c;
+    font-weight: bold
+}
+
+pre .com {
+    color: #87ceeb
+}
+
+/* comment - skyblue */
+pre .typ {
+    color: #98fb98
+}
+
+/* type    - lightgreen */
+pre .lit {
+    color: #cd5c5c
+}
+
+/* literal - darkred */
+pre .pun {
+    color: #fff
+}
+
+/* punctuation */
+pre .pln {
+    color: #fff
+}
+
+/* plaintext */
+pre .tag {
+    color: #f0e68c;
+    font-weight: bold
+}
+
+/* html/xml tag    - lightyellow */
+pre .atn {
+    color: #bdb76b;
+    font-weight: bold
+}
+
+/* attribute name  - khaki */
+pre .atv {
+    color: #ffa0a0
+}
+
+/* attribute value - pink */
+pre .dec {
+    color: #98fb98
+}
+
+/* decimal         - lightgreen */
 
 /* Specify class=linenums on a pre to get line numbering */
-ol.linenums { margin-top: 0; margin-bottom: 0; color: #AEAEAE } /* IE indents via margin-left */
+ol.linenums {
+    margin-top: 0;
+    margin-bottom: 0;
+    color: #AEAEAE
+}
+
+/* IE indents via margin-left */
 
 @media print {
-  pre.prettyprint { background-color: none }
-  pre .str, code .str { color: #060 }
-  pre .kwd, code .kwd { color: #006; font-weight: bold }
-  pre .com, code .com { color: #600; font-style: italic }
-  pre .typ, code .typ { color: #404; font-weight: bold }
-  pre .lit, code .lit { color: #044 }
-  pre .pun, code .pun { color: #440 }
-  pre .pln, code .pln { color: #000 }
-  pre .tag, code .tag { color: #006; font-weight: bold }
-  pre .atn, code .atn { color: #404 }
-  pre .atv, code .atv { color: #060 }
+    pre.prettyprint {
+        background-color: none
+    }
+
+    pre .str, code .str {
+        color: #060
+    }
+
+    pre .kwd, code .kwd {
+        color: #006;
+        font-weight: bold
+    }
+
+    pre .com, code .com {
+        color: #600;
+        font-style: italic
+    }
+
+    pre .typ, code .typ {
+        color: #404;
+        font-weight: bold
+    }
+
+    pre .lit, code .lit {
+        color: #044
+    }
+
+    pre .pun, code .pun {
+        color: #440
+    }
+
+    pre .pln, code .pln {
+        color: #000
+    }
+
+    pre .tag, code .tag {
+        color: #006;
+        font-weight: bold
+    }
+
+    pre .atn, code .atn {
+        color: #404
+    }
+
+    pre .atv, code .atv {
+        color: #060
+    }
 }

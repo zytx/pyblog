@@ -13,14 +13,17 @@
 <article class="article mb-4">
     <h1 class="h2 mt-2 text-center">{{ object.title }}</h1>
     <div class="text-secondary text-center small mb-3">
-        {% language 'en' %}{{ object.created_time|date:"N j, Y" }}{% endlanguage %}
+        {% language 'en' %}{{ object.created_time|date:"N j, Y" }}{% endlanguage %} ·
+        <a href="{% url 'tag' object.tags.all.0.title %}" rel="tag" title="标签：{{object.tags.all.0.title|capfirst}}">
+            {{object.tags.all.0.title|capfirst}}</a>
     </div>
     <div class="article-text">{{ object.content_html|safe }}</div>
     <div class="article-footer text-secondary mt-4">
+        <i class="fas fa-tags pr-2" aria-hidden="true"></i>
         {% for tag in object.tags.all %}
-        <a class="tag-list" href="{% url 'tag' tag.title %}" rel="tag" title="标签：{{tag.title}}">{{tag.title}}</a>
+        <a class="tag-list" href="{% url 'tag' tag.title %}" rel="tag" title="标签：{{tag.title|capfirst}}">{{tag.title|capfirst}}</a>
         {% endfor %}
-        <div class="mt-2">
+        <div class="border-top font-weight-light mt-2 pt-2">
             本站文章若未特别说明均为原创，如需转载请注明出处。
         </div>
     </div>
