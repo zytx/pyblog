@@ -12,8 +12,8 @@
             {% if user.is_authenticated %}
             Hi，<span class="nikename">{{user.get_full_name}}</span> | <a class="text-white" href="{% url 'admin:logout' %}" rel="nofollow">注销</a>
             {% else %}
-                <a class="text-white mr-1" data-toggle="modal" data-target="#login-modal" href="#"><i class="fas fa-sign-in-alt"></i> 登录</a> |
-                <a class="text-white ml-1" data-toggle="modal" data-target="#register-modal" href="#"><i class="fas fa-sign-out-alt"></i> 注册</a>
+                <a class="text-white" data-toggle="modal" data-target="#login-modal" href="#">登录</a> |
+                <a class="text-white" data-toggle="modal" data-target="#register-modal" href="#">注册</a>
             {% endif %}
         </div>
     </div>
@@ -26,8 +26,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbar-top">
             <div class="navbar-nav mr-auto">
-                <a class="nav-item nav-link p-3" href="{% url 'index' %}"><i class="fas fa-home"></i> 首页</a>
-                <a class="nav-item nav-link p-3" href="{% url 'archive' %}"><i class="fas fa-folder-open"></i> 归档</a>
+                <a class="nav-item nav-link p-3" href="{% url 'index' %}">首页</a>
+                <a class="nav-item nav-link p-3" href="{% url 'archive' %}">归档</a>
             </div>
             <span class="navbar-text pl-3">
                 <div class="custom-control custom-checkbox">

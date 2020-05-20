@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'pyblog',
+    'comment',
     'editormd',
     'authentication',
 ]
@@ -185,6 +186,10 @@ REST_FRAMEWORK = {
     ),
     'DATETIME_FORMAT': "%Y-%m-%d %H:%M:%S"
 }
+
+RECAPTCHA_SECRET = os.getenv('RECAPTCHA_SECRET')
+RECAPTCHA_LEVEL = 0.7
+
 try:
     from .settings_local import *
 except Exception:

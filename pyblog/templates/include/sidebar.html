@@ -1,5 +1,5 @@
 {% load pyblog %}
-<h4 class="pb-2"><i class="fas fa-fire-alt text-secondary small"></i> 推荐文章</h4>
+<h4 class="pb-2">推荐文章</h4>
 <ul class="list-unstyled text-muted mb-3">
 {% hotArticle as hotArticle %}
   {% for item in hotArticle %}
@@ -7,11 +7,11 @@
   {% endfor %}
 </ul>
 
-<h4 class="pb-2"><i class="fas fa-tags text-secondary small"></i> 标签</h4>
+<h4 class="pb-2">标签</h4>
 <div class="tags">
 {% tags as tags %}
   {% for tag in tags %}
-  <a class="tag-list" href="{% url 'tag' tag.title %}" title="{{tag.title|capfirst}}">{{tag.title|capfirst}}</a>
+  <a class="tag-list" href="{% url 'tag' tag.title %}" title="{{tag.title}}">{{tag.title}}</a>
   {% endfor %}
 </div>
 

@@ -7,11 +7,10 @@
             <section class="post-list-item mb-4">
                 <h2><a href="{% url 'post' post.slug %}" title="{{ post.title }}">{{ post.title }}</a></h2>
                 <div>
-                    <span class="text-muted">
-                        {% language 'en' %}{{ post.created_time|date:"N j, Y" }}{% endlanguage %} ·
-                    </span>
+                    <span class="text-muted">{% language 'en' %}
+                        {{ post.created_time|date:"N j, Y" }}{% endlanguage %}</span> ·
                     {% for tag in post.tags.all %}
-                        <a href="{% url 'tag' tag %}" title="{{tag.title|capfirst}}">{{ tag.title|capfirst }} </a>
+                        {{ tag.title }}
                     {% endfor %}
                 </div>
                 <div class="summary">{{ post.content_html|striptags|denewline|slice:"500" }}</div>

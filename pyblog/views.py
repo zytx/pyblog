@@ -1,8 +1,11 @@
 from django.conf import settings
 from django.db.models import Prefetch
+from django.http import JsonResponse
 from django.views.generic import ListView, ArchiveIndexView
 from django.views.generic.detail import DetailView
 
+from comment.forms import get_comment_form, post_comment_form
+from comment.models import Comment
 from . import models
 
 
@@ -46,9 +49,18 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         result = super(__class__, self).get_context_data(**kwargs)
+        result['comments'] = Comment.get_comment_list(uid=self.object.uid)
+        result['commentForm'] = get_comment_form(self.request)
         result['relatedPosts'] = models.Post.objects.filter(tags__in=result['post'].tags.all()).exclude(
-            slug=result['post'].slug).distinct().order_by('-created_time').only('slug', 'title')[:10]
+            id=result['post'].id).distinct().order_by('-created_time').only('slug', 'title')[:10]
         return result
+
+    def post(self, request, *args, **kwargs):
+        result = post_comment_form(request, self.get_object().uid)
+        if self.request.is_ajax():
+            return JsonResponse(result)
+        else:
+            return self.get(request, *args, **kwargs)
 
 
 class ArchiveView(ArchiveIndexView):
