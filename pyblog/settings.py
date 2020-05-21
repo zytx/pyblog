@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'comment',
     'editormd',
     'authentication',
+    'joplin'
 ]
 
 MIDDLEWARE = [
@@ -77,8 +78,14 @@ DATABASES = {
         'HOST': os.getenv('DATABASE_HOST'),
         'PORT': os.getenv('DATABASE_PORT', '3306'),
         'OPTIONS': {'charset': 'utf8mb4'},
+    },
+    'joplin': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.getenv('JOPLIN_DATABASE_NAME', '3306'),
     }
 }
+
+DATABASE_ROUTERS = ['joplin.router.db_router.JoplinRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -172,6 +179,8 @@ STORAGE_OPTION = {
         'domain': os.getenv('MEDIA_DOMAIN', '//media.immrz.com')
     }
 }
+
+JOPLIN_MEDIA_URL_PREFIX = os.getenv('JOPLIN_MEDIA_URL_PREFIX')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
