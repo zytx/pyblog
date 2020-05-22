@@ -71,7 +71,7 @@ class NoteResources(models.Model):
 
 class Note(models.Model):
     id = models.CharField(max_length=255, primary_key=True)
-    parent = models.ForeignKey('self', models.SET_NULL, null=True)
+    parent = models.ForeignKey('Folder', models.SET_NULL, null=True)
     title = models.CharField(max_length=255)
     body = models.TextField()
     is_conflict = models.IntegerField()

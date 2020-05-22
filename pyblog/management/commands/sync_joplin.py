@@ -1,8 +1,9 @@
 import re
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from django.conf import settings
+
 from joplin import models as models_joplin
 from pyblog import models as models_blog
 
@@ -11,6 +12,7 @@ class Command(BaseCommand):
     last_sync_at = 0
     pattern_resource = re.compile(r'(\[.*\]\()(:/)([a-z0-9]+)?(\))')
     source_url_prefix = settings.JOPLIN_MEDIA_URL_PREFIX
+    folder = models_joplin.Folder.objects.filter(title__contains='发布').first()
 
     def add_arguments(self, parser):
         parser.add_argument('-i', '--interval', type=int, help='Sync interval', default=5)
@@ -18,15 +20,24 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if not options['force']:
-            self.last_sync_at = (timezone.now().timestamp() - options['interval'] * 60) * 1000
+            self.last_sync_at = int((timezone.now().timestamp() - options['interval'] * 60) * 1000)
         self.sync_tags()
-        note_query = models_joplin.Note.objects.filter(updated_time__gt=self.last_sync_at,
-                                                       source_url__isnull=False).exclude(source_url='')
+        note_query = models_joplin.Note.objects.filter(updated_time__gte=self.last_sync_at,
+                                                       source_url__isnull=False,
+                                                       parent_id=self.folder.id).exclude(source_url='')
+
         for note in note_query:
-            post, created = models_blog.Post.objects.update_or_create(uid=note.id,
-                                                                      defaults=self.parse_note_to_post_dict(note))
-            post_tags = models_blog.Tag.objects.filter(uid__in=list(note.tags.values_list('id', flat=True)))
-            post.tags.set(post_tags)
+            models_blog.Post.objects.update_or_create(uid=note.id,
+                                                      defaults=self.parse_note_to_post_dict(note))
+
+        # sync post tags
+        notes_tags = models_joplin.Note.objects.filter(source_url__isnull=False,
+                                                       parent_id=self.folder.id
+                                                       ).prefetch_related('tags').only('id', 'tags')
+        for note in notes_tags:
+            post = models_blog.Post.objects.get(uid=note.id)
+            post.tags.set(models_blog.Tag.objects.filter(uid__in=list(note.tags.values_list('id', flat=True))))
+
         self.delete_redundant_post()
 
     def sync_tags(self):
@@ -45,14 +56,19 @@ class Command(BaseCommand):
         }
 
     def pares_img_url(self, body):
-        resource = models_joplin.Resource.objects.get(id=body.group(3))
-        return f'{body.group(1)}{self.source_url_prefix}{body.group(3)}.{resource.file_extension}{body.group(4)}'
+        try:
+            file_extension = models_joplin.Resource.objects.get(id=body.group(3)).file_extension
+        except models_joplin.Resource.DoesNotExist:
+            self.stderr(f'Resource {body.group(3)} does not exist.')
+            file_extension = ''
+        return f'{body.group(1)}{self.source_url_prefix}{body.group(3)}.{file_extension}{body.group(4)}'
 
-    @staticmethod
-    def delete_redundant_post():
+    def delete_redundant_post(self):
         notes_ids = list(models_joplin.Note.objects.filter(
-            source_url__isnull=False).exclude(source_url='').values_list('id', flat=True))
-        models_blog.Post.objects.exclude(uid__in=notes_ids).delete()
+            source_url__isnull=False,
+            parent_id=self.folder.id).exclude(source_url='').values_list('id', flat=True))
+        if notes_ids:
+            models_blog.Post.objects.exclude(uid__in=notes_ids).delete()
 
     @staticmethod
     def _ts_to_datetime(ts):

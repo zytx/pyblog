@@ -81,7 +81,7 @@ DATABASES = {
     },
     'joplin': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.getenv('JOPLIN_DATABASE_NAME', '3306'),
+        'NAME': os.getenv('JOPLIN_DATABASE_NAME'),
     }
 }
 

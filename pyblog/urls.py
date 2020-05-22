@@ -8,8 +8,6 @@ urlpatterns = [
     path(r'admin/', admin.site.urls),
     path(r'archive/', views.ArchiveView.as_view(), name='archive'),
     path(r'tag/<title>/', views.TagListView.as_view(), name='tag'),
-
-    path(r'editormd/', include('editormd.urls')),
     path(r'auth/', include('authentication.urls')),
 
     path(r'api/', include('api.urls', namespace='api')),

@@ -10,7 +10,8 @@
 	<meta name="keywords" content="{% block keywords %}{% endblock %}">
 	<meta name="description" content="{% block description %}{% endblock %}">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css">
 	<link rel="stylesheet" href="{% static 'css/style.css' %}" />
 	<link rel="shortcut icon" href="{% static 'favicon.ico' %}" />
 </head>
@@ -118,10 +119,9 @@
 		</div>
 	</div>
 </div>
-	<script src="//cdn.jsdelivr.net/combine/npm/jquery@3,npm/popper.js,npm/bootstrap@4.0.0/dist/js/bootstrap.min.js,npm/emojione@3.1.2"></script>
+	<script src="//cdn.jsdelivr.net/combine/npm/jquery@3,npm/popper.js,npm/bootstrap@4.5.0/dist/js/bootstrap.min.js,npm/emojione@3.1.2"></script>
 	<script src="{% static 'js/comment.js' %}"></script>
 	<script src="{% static 'js/apps.js' %}"></script>
-    <script src="https://recaptcha.net/recaptcha/api.js?render=6LcM4fkUAAAAALu7X_9YUDBR8tQ_doWoX9IpqJSf"></script>
 </body>
 </html>
 {% endif %}
