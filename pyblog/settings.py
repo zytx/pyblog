@@ -153,7 +153,7 @@ DOMAIN_NAME = os.getenv('DOMAIN_NAME', 'www.immrz.com')
 
 if not DEBUG:
     STATICFILES_STORAGE = 'qcloudcos.storage.StaticStorage'  # 静态文件存储后端
-    DEFAULT_FILE_STORAGE = 'qcloudcos.storage.MediaStorage'  # 上传文件存储后端
+    # DEFAULT_FILE_STORAGE = 'qcloudcos.storage.MediaStorage'  # 上传文件存储后端
 
 STORAGE_OPTION = {
     'STATIC': {
