@@ -31,9 +31,9 @@ class Command(BaseCommand):
                                                       defaults=self.parse_note_to_post_dict(note))
 
         # sync post tags
-        notes_tags = models_joplin.Note.objects.filter(source_url__isnull=False,
-                                                       parent_id=self.folder.id
-                                                       ).prefetch_related('tags').only('id', 'tags')
+        notes_tags = models_joplin.Note.objects.filter(
+            source_url__isnull=False, parent_id=self.folder.id
+        ).exclude(source_url='').prefetch_related('tags').only('id', 'tags')
         for note in notes_tags:
             post = models_blog.Post.objects.get(uid=note.id)
             post.tags.set(models_blog.Tag.objects.filter(uid__in=list(note.tags.values_list('id', flat=True))))
