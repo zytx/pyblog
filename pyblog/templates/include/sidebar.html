@@ -17,7 +17,7 @@
 
 
 <nav id="outline" class="mt-3">
-{% if article %}
-  {% outline %}
+{% if object.outline %}
+  {{ object.outline|outline }}
 {% endif %}
 </nav>

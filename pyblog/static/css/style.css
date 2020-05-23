@@ -210,7 +210,7 @@ img.emojione {
     color: #fff;
 }
 
-.tag-list:hover::after {
+.tag-list:hover::after, .tag-list:focus::after {
     border-left-color: #17a2b8;
 }
 

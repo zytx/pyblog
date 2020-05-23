@@ -3,29 +3,30 @@ import json
 import requests
 from django import forms
 from django.conf import settings
+
 from .models import Comment
 
 
 class AuthenticatedForm(forms.ModelForm):
     to = forms.IntegerField(widget=forms.HiddenInput, required=False)
-    recaptcha_token = forms.CharField(show_hidden_initial=True)
+    recaptcha_token = forms.CharField(show_hidden_initial=True, empty_value=False)
 
     class Meta:
         model = Comment
-        fields = ['content', 'allow_email', 'recaptcha_token']
+        fields = ['allow_email', 'recaptcha_token', 'content']
 
-    def clean(self):
-        token = self.cleaned_data['recaptcha_token']
+    def clean_content(self):
+        token = self.cleaned_data.get('recaptcha_token')
         try:
             res = requests.post('https://recaptcha.net/recaptcha/api/siteverify', data={
                 'secret': settings.RECAPTCHA_SECRET,
                 'response': token
             }).json()
             if res.get('score', 0) < settings.RECAPTCHA_LEVEL:
-                self._errors["content"] = ['Google reCAPTCHA said: "You are a robot"']
+                raise forms.ValidationError('Google reCAPTCHA said: "You are a robot"')
         except (requests.RequestException, json.JSONDecodeError):
-            self._errors["content"] = ['reCAPTCHA API Error']
-        return self.cleaned_data
+            raise forms.ValidationError('reCAPTCHA API Error')
+        return self.cleaned_data.get('content')
 
 
 class GuestForm(AuthenticatedForm):
@@ -35,7 +36,7 @@ class GuestForm(AuthenticatedForm):
 
     class Meta:
         model = Comment
-        fields = ["nickname", 'email', 'url', 'content', 'allow_email', 'recaptcha_token']
+        fields = ['nickname', 'email', 'url', 'allow_email', 'recaptcha_token', 'content']
 
 
 def get_comment_form(request):

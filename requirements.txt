@@ -3,6 +3,6 @@ djangorestframework==3.11.0
 mysqlclient
 Pillow
 Cython
-mistune==0.7.4
+mistune==2.0.0a4
 requests
 gunicorn

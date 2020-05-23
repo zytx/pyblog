@@ -1,9 +1,13 @@
+import json
 import uuid
 
 from django.db import models
 from django.utils import timezone
 
-from .templatetags.pyblog import markdown_to_html
+from .markdown.parser import parse_markdown
+
+
+# from pyblog.markdown.parser import markdown_parser
 
 
 class Tag(models.Model):
@@ -41,6 +45,8 @@ class Post(models.Model):
     created_time = models.DateTimeField('创建日期', default=timezone.now)
     updated_time = models.DateTimeField('修改日期', default=timezone.now)
 
+    outline = models.TextField('提纲', null=True, blank=True)
+
     class Meta:
         verbose_name = '文章'
         verbose_name_plural = verbose_name
@@ -54,5 +60,5 @@ class Post(models.Model):
     tags_str.short_description = '标签'
 
     def save(self, *args, **kwargs):
-        self.content_html = markdown_to_html(self.content)
+        self.content_html, self.outline = parse_markdown(self.content)
         super(Post, self).save(*args, **kwargs)
