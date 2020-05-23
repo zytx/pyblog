@@ -1,14 +1,14 @@
 from django import forms
-from .models import Article
-from editormd.widget import EditormdWidget
+from .models import Post
+from editormd.widget import EditorMdWidget
 
 
-class ArticleAdminForm(forms.ModelForm):
+class PostAdminForm(forms.ModelForm):
     class Meta:
-        model = Article
+        model = Post
         widgets = {
             'desc': forms.Textarea(),
-            'content': EditormdWidget(),
+            'content': EditorMdWidget(),
         }
         # fields = '__all__'
         exclude = ['author']

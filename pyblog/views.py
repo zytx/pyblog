@@ -1,95 +1,74 @@
 from django.conf import settings
-from django.db.models import Q, Prefetch
+from django.db.models import Prefetch
 from django.http import JsonResponse
 from django.views.generic import ListView, ArchiveIndexView
 from django.views.generic.detail import DetailView
 
 from comment.forms import get_comment_form, post_comment_form
 from comment.models import Comment
-from .models import Article, Category, Tag
+from . import models
 
 
-class ArticleList(ListView):
+class PostListView(ListView):
     allow_empty = False
-    queryset = Article.objects.select_related('category').filter(is_pub=True).only('title', 'slug', 'content',
-                                                                                   'pub_date', 'category__title',
-                                                                                   'category__slug')
-    ordering = "-pub_date"
+    queryset = models.Post.objects.filter(is_published=True).only('title', 'slug', 'content', 'updated_time')
+    ordering = "-created_time"
     paginate_by = 5
 
 
-class Index(ArticleList):
+class Index(PostListView):
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
-        re = super(__class__, self).get_context_data(**kwargs)
-        re['keywords'] = settings.INDEX_KEYWORDS
-        re['description'] = settings.INDEX_DESCRIPTION
-        return re
+        result = super(__class__, self).get_context_data(**kwargs)
+        result['keywords'] = settings.INDEX_KEYWORDS
+        result['description'] = settings.INDEX_DESCRIPTION
+        return result
 
 
-class CategoryList(ArticleList):
-    template_name = 'category.html'
-
-    def get_queryset(self):
-        return super(__class__, self).get_queryset().filter(category__slug=self.kwargs['slug'])
-
-    def get_context_data(self, **kwargs):
-        re = super(__class__, self).get_context_data(**kwargs)
-        re['category'] = Category.objects.get(slug=self.kwargs['slug'])
-        return re
-
-
-class TagList(ArticleList):
+class TagListView(PostListView):
     template_name = 'tag.html'
 
     def get_queryset(self):
-        return super(__class__, self).get_queryset().filter(tags__slug=self.kwargs['slug'])
+        return super(__class__, self).get_queryset().filter(tags__title=self.kwargs['title'])
 
     def get_context_data(self, **kwargs):
-        re = super(__class__, self).get_context_data(**kwargs)
-        re['tag'] = Tag.objects.get(slug=self.kwargs['slug'])
-        return re
+        result = super(__class__, self).get_context_data(**kwargs)
+        result['tag'] = models.Tag.objects.get(title=self.kwargs['title'])
+        return result
 
 
-class ArticleDetail(DetailView):
-    model = Article
+class PostDetailView(DetailView):
+    model = models.Post
     allow_empty = False
-    template_name = 'article.html'
+    template_name = 'post_detail.html'
 
     def get_queryset(self):
-        return super(__class__, self).get_queryset().select_related('category').prefetch_related(
-            Prefetch('tags', queryset=Tag.objects.only('title', 'slug'))).only('title', 'slug', 'keywords', 'desc',
-                                                                               'content', 'pub_date', 'category__title',
-                                                                               'category__slug')
+        return super(__class__, self).get_queryset().prefetch_related(
+            Prefetch('tags', queryset=models.Tag.objects.only('title')))
 
     def get_context_data(self, **kwargs):
-        re = super(__class__, self).get_context_data(**kwargs)
-        re['comments'] = Comment.get_comment_list(article=self.object)
-        re['commentForm'] = get_comment_form(self.request)
-        re['relatedArticles'] = Article.objects.filter(
-            Q(category=re['article'].category) | Q(tags__in=re['article'].tags.all())).exclude(
-            slug=re['article'].slug).distinct().order_by('-pub_date').only('slug', 'title')[:10]
-        return re
+        result = super(__class__, self).get_context_data(**kwargs)
+        result['comments'] = Comment.get_comment_list(uid=self.object.uid)
+        result['commentForm'] = get_comment_form(self.request)
+        result['relatedPosts'] = models.Post.objects.filter(tags__in=result['post'].tags.all()).exclude(
+            id=result['post'].id).distinct().order_by('-created_time').only('slug', 'title')[:10]
+        return result
 
     def post(self, request, *args, **kwargs):
-        result = post_comment_form(request, Article.objects.get(slug=kwargs['slug']))
+        result = post_comment_form(request, self.get_object().uid)
         if self.request.is_ajax():
             return JsonResponse(result)
         else:
             return self.get(request, *args, **kwargs)
 
 
-class Archive(ArchiveIndexView):
-    model = Article
+class ArchiveView(ArchiveIndexView):
+    model = models.Post
     allow_empty = False
-    date_field = 'pub_date'
+    date_field = 'created_time'
     date_list_period = 'month'
     template_name = 'archive.html'
 
     def get_queryset(self):
-        return super(__class__, self).get_queryset().values('title', 'slug', 'pub_date')
-
-    def get_context_data(self, **kwargs):
-        re = super(__class__, self).get_context_data(**kwargs)
-        return re
+        return super(__class__, self).get_queryset().values('title', 'slug', 'created_time')

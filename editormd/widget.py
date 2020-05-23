@@ -8,8 +8,8 @@ except ImportError:
 from django.utils.safestring import mark_safe
 
 
-class EditormdWidget(forms.Textarea):
-    def render(self, name, value, attrs=None):
+class EditorMdWidget(forms.Textarea):
+    def render(self, name, value, attrs=None, renderer=None):
         if value is None:
             value = ''
         html = """

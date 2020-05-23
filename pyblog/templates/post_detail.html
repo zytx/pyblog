@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load pyblog %}
+{% load i18n %}
+
+{% block title %}{{ object.title }}{% endblock %}
+
+{% block keywords %}{{ object.tags.all|join:"," }}{% endblock %}
+
+{% block description %}{% firstof object.desc object.content_html|striptags|cut:" "|slice:"200"|denewline %}{% endblock %}
+
+{% block content %}
+
+<article class="article mb-4">
+    <h1 class="h2 mt-2 text-center">{{ object.title }}</h1>
+    <div class="text-secondary text-center small mb-3">
+        {% language 'en' %}{{ object.created_time|date:"N j, Y" }}{% endlanguage %} ·
+        <a href="{% url 'tag' object.tags.all.0.title %}" rel="tag" title="标签：{{object.tags.all.0.title|capfirst}}">
+            {{object.tags.all.0.title|capfirst}}</a>
+    </div>
+    <div class="article-text">{{ object.content_html|safe }}</div>
+    <div class="article-footer text-secondary mt-4">
+        <i class="fas fa-tags pr-2" aria-hidden="true"></i>
+        {% for tag in object.tags.all %}
+        <a class="tag-list" href="{% url 'tag' tag.title %}" rel="tag" title="标签：{{tag.title|capfirst}}">{{tag.title|capfirst}}</a>
+        {% endfor %}
+        <div class="border-top font-weight-light mt-2 pt-2">
+            本站文章若未特别说明均为原创，如需转载请注明出处。
+        </div>
+    </div>
+</article>
+<div class="text-center text-secondary mb-4">
+    <button type="button" id="reward" class="btn btn-outline-info rounded-0 mb-3" data-toggle="modal" data-target="#reward-modal">赏</button><br>
+    您的支持将鼓励我继续创作！
+</div>
+<div class="related-articles mb-4">
+    <h4 class="border-bottom mb-3 pb-2"><i class="fas fa-hand-point-right pr-1 text-secondary small" aria-hidden="true"></i> 相关文章</h4>
+    <div class="row">
+    {% for post in relatedPosts %}
+        <div class="col-6 text-truncate">› <a href="{% url 'post' post.slug %}" title="{{post.title}}">{{post.title}}</a></div>
+    {% endfor %}
+    </div>
+</div>
+
+{% if request.is_ajax %}
+<div id="data-outline">
+    {{ object.outline|outline }}
+</div>
+{% endif %}
+{% include "include/comments.html" %}
+{% endblock %}

@@ -1,8 +1,13 @@
 from django.contrib import admin
+from . import models
+from django.shortcuts import reverse
+from django.utils import safestring
+from pyblog.models import Post
 
 
+@admin.register(models.Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('username', 'content', 'article', 'date', 'status')
+    list_display = ('username', 'content', 'post_link', 'date', 'status')
     search_fields = ('user__nickname', 'user__email', 'nickname', 'email', 'content')
 
     class Media:
@@ -26,3 +31,10 @@ class CommentAdmin(admin.ModelAdmin):
         return '-' if obj.nickname else '注册'
 
     status.short_description = '用户状态'
+
+    def post_link(self, obj):
+        post = Post.objects.get(uid=obj.post_uid)
+        return safestring.mark_safe(
+            f"<a href='{reverse('admin:pyblog_post_change', args=(post.id,))}'>{post.title}</a>")
+
+    post_link.short_description = '文章'
