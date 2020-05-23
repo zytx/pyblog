@@ -100,6 +100,5 @@ ENV/
 
 .~c9*.py
 db.sqlite3
-migrations/
 media/*
 static/*
